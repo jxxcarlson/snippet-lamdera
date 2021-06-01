@@ -32,7 +32,7 @@ mainColumn model =
             , header model
             , E.column [ E.spacing 12 ]
                 [ E.row [ E.spacing 12 ]
-                    [ E.el [ Font.color Color.white ] (E.text "MAIN COLUMN") ]
+                    [ View.Input.snippetText model ]
                 ]
             , footer model
             ]

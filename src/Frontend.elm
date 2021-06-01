@@ -49,6 +49,9 @@ init url key =
       , windowHeight = 900
       , popupStatus = PopupClosed
 
+      -- DATA
+      , snippetText = ""
+
       -- USER
       , currentUser = Nothing
       , inputUsername = ""
@@ -112,6 +115,10 @@ update msg model =
               }
             , Cmd.none
             )
+
+        -- DATA
+        InputSnippet str ->
+            ( { model | snippetText = str }, Cmd.none )
 
         -- ADMIN
         AdminRunTask ->

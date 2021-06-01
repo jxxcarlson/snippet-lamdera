@@ -29,6 +29,9 @@ type alias FrontendModel =
     , inputUsername : String
     , inputPassword : String
 
+    -- DATA
+    , snippetText : String
+
     -- UI
     , windowWidth : Int
     , windowHeight : Int
@@ -74,6 +77,8 @@ type FrontendMsg
     | SignOut
     | InputUsername String
     | InputPassword String
+      -- DATA
+    | InputSnippet String
       -- ADMIN
     | AdminRunTask
     | GetUsers
