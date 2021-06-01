@@ -4,8 +4,9 @@ import Authentication
 import Backend.Cmd
 import Backend.Update
 import Dict
-import Lamdera exposing (ClientId, SessionId, sendToFrontend)
+import Lamdera exposing (ClientId, SessionId, broadcast, sendToFrontend)
 import Random
+import Time
 import Types exposing (..)
 
 
@@ -18,8 +19,13 @@ app =
         { init = init
         , update = update
         , updateFromFrontend = updateFromFrontend
-        , subscriptions = \m -> Sub.none
+        , subscriptions = subscriptions
         }
+
+
+subscriptions : Model -> Sub BackendMsg
+subscriptions model =
+    Time.every 1000 Tick
 
 
 init : ( Model, Cmd BackendMsg )
@@ -28,11 +34,12 @@ init =
 
       -- RANDOM
       , randomSeed = Random.initialSeed 1234
-      , uuidCount = 0
       , randomAtmosphericInt = Nothing
+      , currentTime = Time.millisToPosix 0
 
       -- USER
       , authenticationDict = Dict.empty
+      , dataDict = Dict.empty
       }
     , Backend.Cmd.getRandomNumber
     )
@@ -46,6 +53,9 @@ update msg model =
 
         GotAtomsphericRandomNumber result ->
             Backend.Update.gotAtomsphericRandomNumber model result
+
+        Tick time ->
+            ( { model | currentTime = time }, Cmd.none )
 
 
 updateFromFrontend : SessionId -> ClientId -> ToBackend -> Model -> ( Model, Cmd BackendMsg )

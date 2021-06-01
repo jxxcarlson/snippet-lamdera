@@ -4,10 +4,16 @@ import Authentication exposing (AuthenticationDict)
 import Browser exposing (UrlRequest)
 import Browser.Dom as Dom
 import Browser.Navigation exposing (Key)
+import Data exposing (DataDict)
 import Http
 import Random
+import Time
 import Url exposing (Url)
 import User exposing (User)
+
+
+type alias Username =
+    String
 
 
 type alias FrontendModel =
@@ -42,10 +48,13 @@ type PopupStatus
 type alias BackendModel =
     { message : String
 
-    -- RANDOM
+    -- SYSTEM
     , randomSeed : Random.Seed
-    , uuidCount : Int
     , randomAtmosphericInt : Maybe Int
+    , currentTime : Time.Posix
+
+    -- DATA
+    , dataDict : DataDict
 
     -- USER
     , authenticationDict : AuthenticationDict
@@ -82,6 +91,7 @@ type ToBackend
 type BackendMsg
     = NoOpBackendMsg
     | GotAtomsphericRandomNumber (Result Http.Error String)
+    | Tick Time.Posix
 
 
 type ToFrontend
