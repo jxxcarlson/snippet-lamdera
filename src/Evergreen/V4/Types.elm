@@ -72,7 +72,6 @@ type FrontendMsg
     | InputPassword String
     | InputSnippet String
     | Save
-    | MarkdownMsg Markdown.Render.MarkdownMsg
     | EditItem Evergreen.V4.Data.Datum
     | InputSnippetFilter String
     | AdminRunTask
