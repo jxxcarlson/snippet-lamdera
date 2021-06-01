@@ -9,6 +9,7 @@ import Frontend.Cmd
 import Frontend.Update
 import Html exposing (Html)
 import Lamdera exposing (sendToBackend)
+import List.Extra
 import Random
 import Time
 import Token
@@ -47,6 +48,7 @@ init url key =
       , message = "Welcome!"
       , currentTime = Time.millisToPosix 0
       , randomSeed = Random.initialSeed 1234
+      , appMode = EntryMode
 
       -- ADMIN
       , users = []
@@ -59,6 +61,7 @@ init url key =
       -- DATA
       , snippetText = ""
       , snippets = []
+      , currentSnippet = Nothing
 
       -- USER
       , currentUser = Nothing
@@ -144,6 +147,8 @@ update msg model =
                 , message = "Signed out"
                 , inputUsername = ""
                 , inputPassword = ""
+                , snippetText = ""
+                , snippets = []
               }
             , Cmd.none
             )
@@ -158,14 +163,44 @@ update msg model =
                     ( model, Cmd.none )
 
                 Just user ->
-                    let
-                        { token, seed } =
-                            Token.get model.randomSeed
+                    case model.appMode of
+                        EntryMode ->
+                            let
+                                { token, seed } =
+                                    Token.get model.randomSeed
 
-                        snippet =
-                            Data.make user.username model.currentTime token model.snippetText
-                    in
-                    ( { model | snippets = snippet :: model.snippets }, sendToBackend (SaveDatum user.username snippet) )
+                                snippet =
+                                    Data.make user.username model.currentTime token model.snippetText
+                            in
+                            ( { model | snippets = snippet :: model.snippets }, sendToBackend (SaveDatum user.username snippet) )
+
+                        EditMode ->
+                            case model.currentSnippet of
+                                Nothing ->
+                                    ( model, Cmd.none )
+
+                                Just snippet ->
+                                    let
+                                        newSnippet =
+                                            { snippet | content = model.snippetText }
+
+                                        newSnippets =
+                                            List.Extra.setIf (\snip -> snip.id == newSnippet.id) newSnippet model.snippets
+                                    in
+                                    ( { model | snippets = newSnippets, appMode = EntryMode, snippetText = "" }, sendToBackend (UpdateDatum user.username newSnippet) )
+
+        EditItem datum ->
+            ( { model
+                | message = "Editing " ++ datum.id
+                , currentSnippet = Just datum
+                , snippetText = datum.content
+                , appMode = EditMode
+              }
+            , Cmd.none
+            )
+
+        MarkdownMsg _ ->
+            ( model, Cmd.none )
 
         -- ADMIN
         AdminRunTask ->

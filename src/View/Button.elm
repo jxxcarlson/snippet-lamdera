@@ -1,5 +1,6 @@
 module View.Button exposing
     ( adminPopup
+    , editItem
     , getUsers
     , linkTemplate
     , runTask
@@ -73,6 +74,18 @@ signIn =
 save : Element FrontendMsg
 save =
     buttonTemplate [] Save "Save"
+
+
+editItem datum =
+    buttonTemplate
+        [ E.width (E.px 20)
+        , E.height (E.px 20)
+        , Background.color Color.lightBlue2
+        , Font.color Color.palePink
+        , View.Utility.elementAttribute "title" "Click to edit this item"
+        ]
+        (EditItem datum)
+        ""
 
 
 

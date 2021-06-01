@@ -6,6 +6,7 @@ import Browser.Dom as Dom
 import Browser.Navigation exposing (Key)
 import Data exposing (DataDict, Datum)
 import Http
+import Markdown.Render
 import Random
 import Time
 import Url exposing (Url)
@@ -22,6 +23,7 @@ type alias FrontendModel =
     , message : String
     , currentTime : Time.Posix
     , randomSeed : Random.Seed
+    , appMode : AppMode
 
     -- ADMIN
     , users : List User
@@ -34,12 +36,18 @@ type alias FrontendModel =
     -- DATA
     , snippetText : String
     , snippets : List Datum
+    , currentSnippet : Maybe Datum
 
     -- UI
     , windowWidth : Int
     , windowHeight : Int
     , popupStatus : PopupStatus
     }
+
+
+type AppMode
+    = EntryMode
+    | EditMode
 
 
 type PopupWindow
@@ -85,6 +93,8 @@ type FrontendMsg
       -- DATA
     | InputSnippet String
     | Save
+    | MarkdownMsg Markdown.Render.MarkdownMsg
+    | EditItem Datum
       -- ADMIN
     | AdminRunTask
     | GetUsers
@@ -98,6 +108,7 @@ type ToBackend
       -- DATA
     | SaveDatum Username Datum
     | SendUserData Username
+    | UpdateDatum Username Datum
       -- USER
     | SignInOrSignUp String String
 

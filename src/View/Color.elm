@@ -4,9 +4,11 @@ module View.Color exposing
     , darkBlue
     , darkRed
     , lightBlue
+    , lightBlue2
     , lightGray
     , medGray
     , paleBlue
+    , palePink
     , paleViolet
     , red
     , transparentBlue
@@ -15,6 +17,11 @@ module View.Color exposing
     )
 
 import Element as E
+
+
+lightBlue2 : E.Color
+lightBlue2 =
+    E.rgb255 160 160 200
 
 
 white : E.Color
@@ -45,6 +52,10 @@ red =
 darkRed : E.Color
 darkRed =
     E.rgb255 140 0 0
+
+
+palePink =
+    E.rgb255 250 210 243
 
 
 blue : E.Color

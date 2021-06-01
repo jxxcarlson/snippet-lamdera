@@ -5,6 +5,8 @@ import Element as E exposing (Element)
 import Element.Background as Background
 import Element.Font as Font
 import Html exposing (Html)
+import Markdown.Option
+import Markdown.Render
 import Types exposing (..)
 import View.Button as Button
 import View.Color as Color
@@ -33,9 +35,8 @@ mainColumn model =
             , header model
             , E.column [ E.spacing 12 ]
                 [ E.column [ E.spacing 12 ]
-                    [ View.Input.snippetText (appWidth_ model) model.snippetText
-                    , viewSnippets
-                        model
+                    [ View.Input.snippetText model (appWidth_ model) model.snippetText
+                    , viewSnippets model
                     ]
                 ]
             , footer model
@@ -43,6 +44,7 @@ mainColumn model =
         ]
 
 
+viewSnippets : Model -> Element FrontendMsg
 viewSnippets model =
     E.column [ E.spacing 12, E.paddingXY 0 20, E.width (E.px <| appWidth_ model), E.height (E.px (appHeight_ model - 350)), Background.color Color.darkBlue ]
         (List.map (viewSnippet model) model.snippets)
@@ -50,17 +52,21 @@ viewSnippets model =
 
 viewSnippet : Model -> Datum -> Element FrontendMsg
 viewSnippet model datum =
-    E.column
+    E.row
         [ Font.size 14
         , E.spacing 12
         , E.paddingXY 10 10
-        , E.centerX
-        , E.scrollbarY
         , E.width (E.px <| appWidth_ model - 40)
         , E.height (E.px 100)
         , Background.color Color.veryPaleBlue
         ]
-        [ E.text datum.content ]
+        [ Button.editItem datum
+        , E.column []
+            [ Markdown.Render.toHtml Markdown.Option.ExtendedMath datum.content
+                |> Html.map MarkdownMsg
+                |> E.html
+            ]
+        ]
 
 
 footer model =
