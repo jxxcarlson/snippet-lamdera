@@ -5,8 +5,8 @@ module Env exposing (..)
 
 
 transitKey =
-    "Lord of the Rings"
+    "Lord of the Rings !!!"
 
 
 backendAuthKey =
-    "Crows are smart birds!"
+    "Crows are really smart birds!"
