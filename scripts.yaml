@@ -1,0 +1,5 @@
+scripts:
+
+  update-vendor: cp -r ../cayatex/src vendor/cayatex/
+
+  cloc: cloc --by-file --exclude-dir=Evergreen src/
