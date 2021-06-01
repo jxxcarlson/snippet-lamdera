@@ -5,8 +5,7 @@ import Element as E exposing (Element)
 import Element.Background as Background
 import Element.Font as Font
 import Html exposing (Html)
-import Markdown.Option
-import Markdown.Render
+import Markdown
 import Types exposing (..)
 import View.Button as Button
 import View.Color as Color
@@ -71,10 +70,14 @@ viewSnippet model datum =
         , E.height (E.px 100)
         , Background.color Color.veryPaleBlue
         ]
-        [ Button.editItem datum
-        , E.column []
-            [ Markdown.Render.toHtml Markdown.Option.ExtendedMath datum.content
-                |> Html.map MarkdownMsg
+        [ View.Utility.cssNode "minilatex.css"
+        , E.el [ E.alignTop ] (Button.editItem datum)
+        , E.column
+            [ E.width (E.px <| appWidth_ model)
+            , E.height (E.px 100)
+            , E.scrollbarY
+            ]
+            [ Markdown.toHtml [] datum.content
                 |> E.html
             ]
         ]

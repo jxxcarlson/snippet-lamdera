@@ -6,7 +6,6 @@ import Browser.Dom as Dom
 import Browser.Navigation exposing (Key)
 import Data exposing (DataDict, Datum)
 import Http
-import Markdown.Render
 import Random
 import Time
 import Url exposing (Url)
@@ -94,7 +93,6 @@ type FrontendMsg
       -- DATA
     | InputSnippet String
     | Save
-    | MarkdownMsg Markdown.Render.MarkdownMsg
     | EditItem Datum
     | InputSnippetFilter String
       -- ADMIN
