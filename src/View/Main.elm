@@ -31,12 +31,15 @@ mainColumn : Model -> Element FrontendMsg
 mainColumn model =
     E.column (mainColumnStyle model)
         [ E.column [ E.spacing 12, E.width (E.px <| appWidth_ model), E.height (E.px (appHeight_ model)) ]
-            [ title "App"
+            [ title "Snippet Manager"
             , header model
             , E.column [ E.spacing 12 ]
                 [ E.column [ E.spacing 12 ]
                     [ View.Input.snippetText model (appWidth_ model) model.snippetText
-                    , View.Input.snippetFilter model (appWidth_ model)
+                    , E.row [ E.spacing 8, E.width (E.px (appWidth_ model)) ]
+                        [ View.Input.snippetFilter model (appWidth_ model - 70)
+                        , E.el [ Font.color Color.white, Font.size 14, E.alignRight ] (E.text ("N = " ++ String.fromInt (List.length model.snippets)))
+                        ]
                     , viewSnippets model
                     ]
                 ]
@@ -47,7 +50,14 @@ mainColumn model =
 
 viewSnippets : Model -> Element FrontendMsg
 viewSnippets model =
-    E.column [ E.spacing 12, E.paddingXY 0 20, E.width (E.px <| appWidth_ model), E.height (E.px (appHeight_ model - 270)), Background.color Color.darkBlue ]
+    E.column
+        [ E.spacing 12
+        , E.paddingXY 0 0
+        , E.scrollbarY
+        , E.width (E.px <| appWidth_ model)
+        , E.height (E.px (appHeight_ model - 270))
+        , Background.color Color.darkBlue
+        ]
         (List.map (viewSnippet model) (Data.filter model.inputSnippetFilter model.snippets))
 
 
@@ -57,7 +67,7 @@ viewSnippet model datum =
         [ Font.size 14
         , E.spacing 12
         , E.paddingXY 10 10
-        , E.width (E.px <| appWidth_ model - 40)
+        , E.width (E.px <| appWidth_ model)
         , E.height (E.px 100)
         , Background.color Color.veryPaleBlue
         ]
@@ -213,4 +223,4 @@ mainColumnStyle model =
 
 title : String -> Element msg
 title str =
-    E.row [ E.centerX, View.Style.fgGray 0.9 ] [ E.text str ]
+    E.row [ E.paddingEach { top = 0, bottom = 8, left = 0, right = 0 }, E.centerX, View.Style.fgGray 0.9 ] [ E.text str ]

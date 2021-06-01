@@ -3,6 +3,7 @@ module Data exposing
     , DataFile
     , Datum
     , filter
+    , fixUrls
     , insertDatum
     , make
     , setupUser
@@ -32,7 +33,7 @@ make username currentTime id content =
     { id = id
     , title = content |> String.lines |> List.head |> Maybe.withDefault "TITLE"
     , username = username
-    , content = content
+    , content = fixUrls content
     , tags = []
     , creationData = currentTime
     , modificationData = currentTime
@@ -77,3 +78,47 @@ insertDatum username datum dataDict =
 
         Just dataFile ->
             Dict.insert username { dataFile | data = datum :: dataFile.data } dataDict
+
+
+getUrls : String -> List String
+getUrls str =
+    str |> String.words |> List.filter isUrl
+
+
+getLinkLabel : String -> String
+getLinkLabel str =
+    if String.left 7 str == "http://" then
+        String.replace "http://" "" str
+
+    else
+        String.replace "https://" "" str
+
+
+fixUrl : String -> String -> String
+fixUrl url str =
+    let
+        label =
+            getLinkLabel url
+
+        link =
+            " [" ++ label ++ "](" ++ url ++ ")"
+    in
+    -- String.replace (" " ++ url ++ " ") link str
+    String.replace (" " ++ url) link str
+
+
+fixUrls : String -> String
+fixUrls str =
+    let
+        urls =
+            getUrls str
+
+        fixers =
+            List.map fixUrl urls
+    in
+    List.foldl (\fixer str_ -> fixer str_) str fixers
+
+
+isUrl : String -> Bool
+isUrl str =
+    String.left 4 str == "http"

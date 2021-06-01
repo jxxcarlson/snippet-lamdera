@@ -100,7 +100,7 @@ updateFromFrontend sessionId clientId msg model =
                         newDataDict =
                             Dict.insert username { dataFile | data = newData } model.dataDict
                     in
-                    ( { model | dataDict = newDataDict }, sendToFrontend clientId (SendMessage <| "Snippet '" ++ datum.title ++ "' updated.") )
+                    ( { model | dataDict = newDataDict }, sendToFrontend clientId (SendMessage <| "Snippet '" ++ String.left 10 datum.title ++ " ... ' updated.") )
 
         SendUserData username ->
             case Dict.get username model.dataDict of

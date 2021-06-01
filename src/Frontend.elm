@@ -186,7 +186,7 @@ update msg model =
                                 Just snippet ->
                                     let
                                         newSnippet =
-                                            { snippet | content = model.snippetText }
+                                            { snippet | content = model.snippetText |> Data.fixUrls }
 
                                         newSnippets =
                                             List.Extra.setIf (\snip -> snip.id == newSnippet.id) newSnippet model.snippets
