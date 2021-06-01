@@ -34,7 +34,7 @@ init =
     ( { message = "Hello!"
 
       -- RANDOM
-      , randomSeed = Random.initialSeed 1234
+      , randomSeed = Random.initialSeed 12034
       , randomAtmosphericInt = Nothing
       , currentTime = Time.millisToPosix 0
 
@@ -103,7 +103,9 @@ updateFromFrontend sessionId clientId msg model =
                         ( model
                         , Cmd.batch
                             [ sendToFrontend clientId (SendUser userData.user)
-                            , sendToFrontend clientId (SendMessage "Success! You are signed in.")
+                            , sendToFrontend clientId (SendMessage <| "Success! Random atmospheric integer: "
+                               ++ (Maybe.map String.fromInt model.randomAtmosphericInt |> Maybe.withDefault "NONE"))
+
                             , Backend.Cmd.sendUserData username clientId model
                             ]
                         )
