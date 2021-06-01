@@ -7,7 +7,6 @@ import Evergreen.V4.Authentication
 import Evergreen.V4.Data
 import Evergreen.V4.User
 import Http
-import Markdown.Render
 import Random
 import Time
 import Url
