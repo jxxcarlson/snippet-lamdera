@@ -1,4 +1,11 @@
-module Data exposing (DataDict, DataFile, Datum, make)
+module Data exposing
+    ( DataDict
+    , DataFile
+    , Datum
+    , insertDatum
+    , make
+    , setupUser
+    )
 
 import Dict exposing (Dict)
 import Time
@@ -41,3 +48,26 @@ type alias DataFile =
 
 type alias DataDict =
     Dict Username DataFile
+
+
+setupUser : Time.Posix -> Username -> DataDict -> DataDict
+setupUser currentTime username dataDict =
+    let
+        newDataFile =
+            { data = []
+            , username = username
+            , creationData = currentTime
+            , modificationData = currentTime
+            }
+    in
+    Dict.insert username newDataFile dataDict
+
+
+insertDatum : Username -> Datum -> DataDict -> DataDict
+insertDatum username datum dataDict =
+    case Dict.get username dataDict of
+        Nothing ->
+            dataDict
+
+        Just dataFile ->
+            Dict.insert username { dataFile | data = datum :: dataFile.data } dataDict

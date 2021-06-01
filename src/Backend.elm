@@ -3,6 +3,7 @@ module Backend exposing (..)
 import Authentication
 import Backend.Cmd
 import Backend.Update
+import Data
 import Dict
 import Lamdera exposing (ClientId, SessionId, broadcast, sendToFrontend)
 import Random
@@ -68,6 +69,29 @@ updateFromFrontend sessionId clientId msg model =
         RunTask ->
             ( model, Cmd.none )
 
+        SaveDatum username datum ->
+            let
+                dataDict =
+                    Data.insertDatum username datum model.dataDict
+
+                message =
+                    case Dict.get username dataDict of
+                        Nothing ->
+                            "No dataDict"
+
+                        Just dataFile ->
+                            "Datum saved, items = " ++ String.fromInt (List.length dataFile.data)
+            in
+            ( { model | dataDict = dataDict }, sendToFrontend clientId (SendMessage message) )
+
+        SendUserData username ->
+            case Dict.get username model.dataDict of
+                Nothing ->
+                    ( model, sendToFrontend clientId (SendMessage "No data!") )
+
+                Just dataFile ->
+                    ( model, sendToFrontend clientId (GotUserData dataFile.data) )
+
         SendUsers ->
             ( model, sendToFrontend clientId (GotUsers (Authentication.users model.authenticationDict)) )
 
@@ -80,6 +104,7 @@ updateFromFrontend sessionId clientId msg model =
                         , Cmd.batch
                             [ sendToFrontend clientId (SendUser userData.user)
                             , sendToFrontend clientId (SendMessage "Success! You are signed in.")
+                            , Backend.Cmd.sendUserData username clientId model
                             ]
                         )
 

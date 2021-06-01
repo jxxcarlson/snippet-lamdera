@@ -4,6 +4,8 @@ module Backend.Update exposing
     )
 
 import Authentication
+import Data
+import Dict
 import Hex
 import Lamdera exposing (ClientId, broadcast, sendToFrontend)
 import Random
@@ -68,7 +70,7 @@ setupUser model clientId username transitPassword =
             ( { model | randomSeed = seed }, sendToFrontend clientId (SendMessage ("Error: " ++ str)) )
 
         Ok authDict ->
-            ( { model | randomSeed = seed, authenticationDict = authDict }
+            ( { model | randomSeed = seed, authenticationDict = authDict, dataDict = Data.setupUser model.currentTime user.username model.dataDict }
             , Cmd.batch
                 [ sendToFrontend clientId (SendMessage "Success! You have set up your account")
                 , sendToFrontend clientId (SendUser user)

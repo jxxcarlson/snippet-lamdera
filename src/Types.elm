@@ -95,6 +95,9 @@ type ToBackend
       -- ADMIN
     | RunTask
     | SendUsers
+      -- DATA
+    | SaveDatum Username Datum
+    | SendUserData Username
       -- USER
     | SignInOrSignUp String String
 
@@ -110,5 +113,7 @@ type ToFrontend
     | SendMessage String
       -- ADMIN
     | GotUsers (List User)
+      -- DATA
+    | GotUserData (List Datum)
       -- USER
     | SendUser User

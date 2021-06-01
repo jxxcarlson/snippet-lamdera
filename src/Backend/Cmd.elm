@@ -1,7 +1,9 @@
-module Backend.Cmd exposing (getRandomNumber)
+module Backend.Cmd exposing (getRandomNumber, sendUserData)
 
+import Dict
 import Http
-import Types exposing (BackendMsg(..))
+import Lamdera exposing (sendToFrontend)
+import Types exposing (..)
 
 
 getRandomNumber : Cmd BackendMsg
@@ -27,3 +29,12 @@ randomNumberUrl maxDigits =
             "&col=1&base=10&format=plain&rnd=new"
     in
     prefix ++ String.fromInt maxNumber ++ suffix
+
+
+sendUserData username clientId model =
+    case Dict.get username model.dataDict of
+        Nothing ->
+            sendToFrontend clientId (SendMessage "No data!")
+
+        Just dataFile ->
+            sendToFrontend clientId (GotUserData dataFile.data)

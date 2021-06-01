@@ -55,6 +55,7 @@ viewSnippet model datum =
         , E.spacing 12
         , E.paddingXY 10 10
         , E.centerX
+        , E.scrollbarY
         , E.width (E.px <| appWidth_ model - 40)
         , E.height (E.px 100)
         , Background.color Color.veryPaleBlue

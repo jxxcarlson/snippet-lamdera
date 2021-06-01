@@ -165,7 +165,7 @@ update msg model =
                         snippet =
                             Data.make user.username model.currentTime token model.snippetText
                     in
-                    ( { model | snippets = snippet :: model.snippets }, Cmd.none )
+                    ( { model | snippets = snippet :: model.snippets }, sendToBackend (SaveDatum user.username snippet) )
 
         -- ADMIN
         AdminRunTask ->
@@ -184,6 +184,10 @@ updateFromBackend msg model =
         -- ADMIN
         GotUsers users ->
             ( { model | users = users }, Cmd.none )
+
+        -- DATA
+        GotUserData dataList ->
+            ( { model | snippets = dataList }, Cmd.none )
 
         -- USER
         SendUser user ->
