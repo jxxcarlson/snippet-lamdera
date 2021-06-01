@@ -32,6 +32,10 @@ users authDict =
 
 insert : User -> String -> String -> AuthenticationDict -> Result String AuthenticationDict
 insert user salt transitPassword authDict =
+    let
+        _ =
+            Debug.log "(u, salt, transitPW)" ( user, salt, transitPassword )
+    in
     case Credentials.hashPw salt transitPassword of
         Err _ ->
             Err "Could not generate credentials"

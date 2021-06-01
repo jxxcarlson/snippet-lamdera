@@ -61,7 +61,7 @@ setupUser model clientId username transitPassword =
             Token.get seed
 
         user =
-            { username = username, id = tokenData.token, realname = "Undefined", email = "Undefined" }
+            { username = username, id = tokenData.token, realname = "Undefined", email = "Undefined", created = model.currentTime, modified = model.currentTime }
     in
     case Authentication.insert user randomHex transitPassword model.authenticationDict of
         Err str ->
