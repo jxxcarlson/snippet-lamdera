@@ -33,7 +33,7 @@ mainColumn model =
             , header model
             , E.column [ E.spacing 12 ]
                 [ E.column [ E.spacing 12 ]
-                    [ View.Input.snippetText model
+                    [ View.Input.snippetText (appWidth_ model) model.snippetText
                     , viewSnippets
                         model
                     ]
@@ -44,7 +44,7 @@ mainColumn model =
 
 
 viewSnippets model =
-    E.column [ E.spacing 12, E.paddingXY 0 20, E.width (E.px <| appWidth_ model // 2 - 20), E.height (E.px (appHeight_ model - 350)), Background.color Color.darkBlue ]
+    E.column [ E.spacing 12, E.paddingXY 0 20, E.width (E.px <| appWidth_ model), E.height (E.px (appHeight_ model - 350)), Background.color Color.darkBlue ]
         (List.map (viewSnippet model) model.snippets)
 
 
@@ -55,7 +55,7 @@ viewSnippet model datum =
         , E.spacing 12
         , E.paddingXY 10 10
         , E.centerX
-        , E.width (E.px <| appWidth_ model // 2 - 40)
+        , E.width (E.px <| appWidth_ model - 40)
         , E.height (E.px 100)
         , Background.color Color.veryPaleBlue
         ]
@@ -190,7 +190,7 @@ panelHeight_ model =
 
 
 appWidth_ model =
-    min 900 model.windowWidth
+    min 500 model.windowWidth
 
 
 mainColumnStyle model =
