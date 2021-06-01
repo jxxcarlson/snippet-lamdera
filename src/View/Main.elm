@@ -1,5 +1,6 @@
 module View.Main exposing (view)
 
+import Data exposing (Datum)
 import Element as E exposing (Element)
 import Element.Background as Background
 import Element.Font as Font
@@ -31,12 +32,34 @@ mainColumn model =
             [ title "App"
             , header model
             , E.column [ E.spacing 12 ]
-                [ E.row [ E.spacing 12 ]
-                    [ View.Input.snippetText model ]
+                [ E.column [ E.spacing 12 ]
+                    [ View.Input.snippetText model
+                    , viewSnippets
+                        model
+                    ]
                 ]
             , footer model
             ]
         ]
+
+
+viewSnippets model =
+    E.column [ E.spacing 12, E.paddingXY 0 20, E.width (E.px <| appWidth_ model // 2 - 20), E.height (E.px (appHeight_ model - 350)), Background.color Color.darkBlue ]
+        (List.map (viewSnippet model) model.snippets)
+
+
+viewSnippet : Model -> Datum -> Element FrontendMsg
+viewSnippet model datum =
+    E.column
+        [ Font.size 14
+        , E.spacing 12
+        , E.paddingXY 10 10
+        , E.centerX
+        , E.width (E.px <| appWidth_ model // 2 - 40)
+        , E.height (E.px 100)
+        , Background.color Color.veryPaleBlue
+        ]
+        [ E.text datum.content ]
 
 
 footer model =
@@ -44,7 +67,7 @@ footer model =
         [ E.spacing 12
         , E.paddingXY 0 8
         , E.height (E.px 25)
-        , E.width (E.px (2 * panelWidth_ model + 246))
+        , E.width (E.px <| appWidth_ model)
         , Font.size 14
         , E.inFront (View.Popup.admin model)
         ]
@@ -94,6 +117,7 @@ notSignedInHeader model =
 signedInHeader model user =
     E.row [ E.spacing 12 ]
         [ Button.signOut user.username
+        , Button.save
         ]
 
 
@@ -166,7 +190,7 @@ panelHeight_ model =
 
 
 appWidth_ model =
-    2 * panelWidth_ model + docListWidth + 15
+    min 900 model.windowWidth
 
 
 mainColumnStyle model =

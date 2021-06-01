@@ -47,7 +47,7 @@ usernameInput model =
 
 
 snippetText model =
-    multiLineTemplate (E.px 600) (E.px 200) "Snippet" InputSnippet model.snippetText
+    multiLineTemplate (E.px 430) (E.px 100) "Snippet" InputSnippet model.snippetText
 
 
 passwordInput model =

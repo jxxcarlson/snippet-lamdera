@@ -3,6 +3,7 @@ module View.Button exposing
     , getUsers
     , linkTemplate
     , runTask
+    , save
     , signIn
     , signOut
     )
@@ -63,6 +64,15 @@ signOut username =
 signIn : Element FrontendMsg
 signIn =
     buttonTemplate [] SignIn "Sign in | Sign up"
+
+
+
+-- DATA
+
+
+save : Element FrontendMsg
+save =
+    buttonTemplate [] Save "Save"
 
 
 

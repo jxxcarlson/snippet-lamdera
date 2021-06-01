@@ -4,7 +4,7 @@ import Authentication exposing (AuthenticationDict)
 import Browser exposing (UrlRequest)
 import Browser.Dom as Dom
 import Browser.Navigation exposing (Key)
-import Data exposing (DataDict)
+import Data exposing (DataDict, Datum)
 import Http
 import Random
 import Time
@@ -20,6 +20,8 @@ type alias FrontendModel =
     { key : Key
     , url : Url
     , message : String
+    , currentTime : Time.Posix
+    , randomSeed : Random.Seed
 
     -- ADMIN
     , users : List User
@@ -31,6 +33,7 @@ type alias FrontendModel =
 
     -- DATA
     , snippetText : String
+    , snippets : List Datum
 
     -- UI
     , windowWidth : Int
@@ -69,6 +72,8 @@ type FrontendMsg
     | UrlChanged Url
     | GotViewport Dom.Viewport
     | NoOpFrontendMsg
+    | FETick Time.Posix
+    | GotAtomsphericRandomNumberFE (Result Http.Error String)
       -- UI
     | GotNewWindowDimensions Int Int
     | ChangePopupStatus PopupStatus
@@ -79,6 +84,7 @@ type FrontendMsg
     | InputPassword String
       -- DATA
     | InputSnippet String
+    | Save
       -- ADMIN
     | AdminRunTask
     | GetUsers

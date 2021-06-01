@@ -4,10 +4,14 @@ import Authentication
 import Browser exposing (UrlRequest(..))
 import Browser.Events
 import Browser.Navigation as Nav
+import Data
 import Frontend.Cmd
 import Frontend.Update
 import Html exposing (Html)
 import Lamdera exposing (sendToBackend)
+import Random
+import Time
+import Token
 import Types exposing (..)
 import Url exposing (Url)
 import View.Main
@@ -32,6 +36,7 @@ app =
 subscriptions model =
     Sub.batch
         [ Browser.Events.onResize (\w h -> GotNewWindowDimensions w h)
+        , Time.every 1000 FETick
         ]
 
 
@@ -40,6 +45,8 @@ init url key =
     ( { key = key
       , url = url
       , message = "Welcome!"
+      , currentTime = Time.millisToPosix 0
+      , randomSeed = Random.initialSeed 1234
 
       -- ADMIN
       , users = []
@@ -51,13 +58,14 @@ init url key =
 
       -- DATA
       , snippetText = ""
+      , snippets = []
 
       -- USER
       , currentUser = Nothing
       , inputUsername = ""
       , inputPassword = ""
       }
-    , Cmd.batch [ Frontend.Cmd.setupWindow ]
+    , Cmd.batch [ Frontend.Cmd.setupWindow, Frontend.Cmd.getRandomNumberFE ]
     )
 
 
@@ -76,6 +84,30 @@ update msg model =
 
         UrlChanged url ->
             ( { model | url = url }, Cmd.none )
+
+        FETick time ->
+            ( { model | currentTime = time }, Cmd.none )
+
+        GotAtomsphericRandomNumberFE result ->
+            case result of
+                Ok str ->
+                    case String.toInt (String.trim str) of
+                        Nothing ->
+                            ( { model | message = "Failed to get atmospheric random number" }, Cmd.none )
+
+                        Just rn ->
+                            let
+                                newRandomSeed =
+                                    Random.initialSeed rn
+                            in
+                            ( { model
+                                | randomSeed = newRandomSeed
+                              }
+                            , Cmd.none
+                            )
+
+                Err _ ->
+                    ( model, Cmd.none )
 
         -- UI
         GotNewWindowDimensions w h ->
@@ -119,6 +151,21 @@ update msg model =
         -- DATA
         InputSnippet str ->
             ( { model | snippetText = str }, Cmd.none )
+
+        Save ->
+            case model.currentUser of
+                Nothing ->
+                    ( model, Cmd.none )
+
+                Just user ->
+                    let
+                        { token, seed } =
+                            Token.get model.randomSeed
+
+                        snippet =
+                            Data.make user.username model.currentTime token model.snippetText
+                    in
+                    ( { model | snippets = snippet :: model.snippets }, Cmd.none )
 
         -- ADMIN
         AdminRunTask ->
