@@ -62,6 +62,7 @@ init url key =
       , snippetText = ""
       , snippets = []
       , currentSnippet = Nothing
+      , inputSnippetFilter = ""
 
       -- USER
       , currentUser = Nothing
@@ -157,6 +158,9 @@ update msg model =
         InputSnippet str ->
             ( { model | snippetText = str }, Cmd.none )
 
+        InputSnippetFilter str ->
+            ( { model | inputSnippetFilter = str }, Cmd.none )
+
         Save ->
             case model.currentUser of
                 Nothing ->
@@ -187,7 +191,14 @@ update msg model =
                                         newSnippets =
                                             List.Extra.setIf (\snip -> snip.id == newSnippet.id) newSnippet model.snippets
                                     in
-                                    ( { model | snippets = newSnippets, appMode = EntryMode, snippetText = "" }, sendToBackend (UpdateDatum user.username newSnippet) )
+                                    ( { model
+                                        | snippets = newSnippets
+                                        , appMode = EntryMode
+                                        , currentSnippet = Nothing
+                                        , snippetText = ""
+                                      }
+                                    , sendToBackend (UpdateDatum user.username newSnippet)
+                                    )
 
         EditItem datum ->
             ( { model

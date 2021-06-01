@@ -37,6 +37,7 @@ type alias FrontendModel =
     , snippetText : String
     , snippets : List Datum
     , currentSnippet : Maybe Datum
+    , inputSnippetFilter : String
 
     -- UI
     , windowWidth : Int
@@ -95,6 +96,7 @@ type FrontendMsg
     | Save
     | MarkdownMsg Markdown.Render.MarkdownMsg
     | EditItem Datum
+    | InputSnippetFilter String
       -- ADMIN
     | AdminRunTask
     | GetUsers

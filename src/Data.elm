@@ -2,6 +2,7 @@ module Data exposing
     ( DataDict
     , DataFile
     , Datum
+    , filter
     , insertDatum
     , make
     , setupUser
@@ -48,6 +49,11 @@ type alias DataFile =
 
 type alias DataDict =
     Dict Username DataFile
+
+
+filter : String -> List Datum -> List Datum
+filter filterString data =
+    List.filter (\datum -> String.contains filterString datum.content) data
 
 
 setupUser : Time.Posix -> Username -> DataDict -> DataDict

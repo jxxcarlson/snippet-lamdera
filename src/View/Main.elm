@@ -36,6 +36,7 @@ mainColumn model =
             , E.column [ E.spacing 12 ]
                 [ E.column [ E.spacing 12 ]
                     [ View.Input.snippetText model (appWidth_ model) model.snippetText
+                    , View.Input.snippetFilter model (appWidth_ model)
                     , viewSnippets model
                     ]
                 ]
@@ -46,8 +47,8 @@ mainColumn model =
 
 viewSnippets : Model -> Element FrontendMsg
 viewSnippets model =
-    E.column [ E.spacing 12, E.paddingXY 0 20, E.width (E.px <| appWidth_ model), E.height (E.px (appHeight_ model - 350)), Background.color Color.darkBlue ]
-        (List.map (viewSnippet model) model.snippets)
+    E.column [ E.spacing 12, E.paddingXY 0 20, E.width (E.px <| appWidth_ model), E.height (E.px (appHeight_ model - 270)), Background.color Color.darkBlue ]
+        (List.map (viewSnippet model) (Data.filter model.inputSnippetFilter model.snippets))
 
 
 viewSnippet : Model -> Datum -> Element FrontendMsg

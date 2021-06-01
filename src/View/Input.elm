@@ -1,5 +1,6 @@
 module View.Input exposing
     ( passwordInput
+    , snippetFilter
     , snippetText
     , usernameInput
     )
@@ -46,6 +47,10 @@ passwordTemplate width_ default msg text =
 
 usernameInput model =
     inputFieldTemplate (E.px 120) (E.px 33) "Username" InputUsername model.inputUsername
+
+
+snippetFilter model width_ =
+    inputFieldTemplate (E.px width_) (E.px 33) "Filter ..." InputSnippetFilter model.inputSnippetFilter
 
 
 snippetText : FrontendModel -> Int -> String -> Element FrontendMsg
