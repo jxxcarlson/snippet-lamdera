@@ -22,7 +22,7 @@ type alias Model =
 view : Model -> Html FrontendMsg
 view model =
     E.layoutWith { options = [ E.focusStyle View.Utility.noFocus ] }
-        [ View.Style.bgGray 0.9, E.clipX, E.clipY ]
+        [ View.Style.bgGray 0.2, E.clipX, E.clipY ]
         (mainColumn model)
 
 
