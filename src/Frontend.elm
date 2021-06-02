@@ -63,6 +63,7 @@ init url key =
       , snippets = []
       , currentSnippet = Nothing
       , inputSnippetFilter = ""
+      , viewMode = Collapsed
 
       -- USER
       , currentUser = Nothing
@@ -227,6 +228,23 @@ update msg model =
                 , currentSnippet = Just datum
                 , snippetText = datum.content
                 , appMode = EditMode
+              }
+            , Cmd.none
+            )
+
+        ExpandContractItem datum ->
+            let
+                toggleViewMode mode =
+                    case mode of
+                        Expanded ->
+                            Collapsed
+
+                        Collapsed ->
+                            Expanded
+            in
+            ( { model
+                | currentSnippet = Just datum
+                , viewMode = toggleViewMode model.viewMode
               }
             , Cmd.none
             )

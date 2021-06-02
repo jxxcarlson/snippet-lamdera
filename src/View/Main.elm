@@ -62,20 +62,30 @@ viewSnippets model =
 
 viewSnippet : Model -> Datum -> Element FrontendMsg
 viewSnippet model datum =
+    let
+        h =
+            if Just datum.id == Maybe.map .id model.currentSnippet && model.viewMode == Expanded then
+                300
+
+            else
+                100
+    in
     E.row
         [ Font.size 14
         , E.spacing 12
         , E.paddingXY 10 10
         , E.width (E.px <| appWidth_ model)
-        , E.height (E.px 100)
+        , E.height (E.px h)
         , Background.color Color.veryPaleBlue
         ]
         [ View.Utility.cssNode "minilatex.css"
-        , E.el [ E.alignTop ] (Button.editItem datum)
+        , E.column [ E.alignTop, E.spacing 8 ] [ E.el [] (Button.editItem datum), Button.expandCollapse datum ]
         , E.column
             [ E.width (E.px <| appWidth_ model)
             , E.height (E.px 100)
             , E.scrollbarY
+            , E.alignTop
+            , E.moveUp 16
             , View.Utility.elementAttribute "line-height" "1.5"
             ]
             [ Markdown.toHtml [] datum.content

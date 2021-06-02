@@ -37,12 +37,18 @@ type alias FrontendModel =
     , snippets : List Datum
     , currentSnippet : Maybe Datum
     , inputSnippetFilter : String
+    , viewMode : ViewMode
 
     -- UI
     , windowWidth : Int
     , windowHeight : Int
     , popupStatus : PopupStatus
     }
+
+
+type ViewMode
+    = Expanded
+    | Collapsed
 
 
 type AppMode
@@ -96,6 +102,7 @@ type FrontendMsg
     | EditItem Datum
     | Delete
     | InputSnippetFilter String
+    | ExpandContractItem Datum
       -- ADMIN
     | AdminRunTask
     | GetUsers

@@ -2,6 +2,7 @@ module View.Button exposing
     ( adminPopup
     , delete
     , editItem
+    , expandCollapse
     , getUsers
     , linkTemplate
     , runTask
@@ -86,11 +87,23 @@ editItem datum =
     buttonTemplate
         [ E.width (E.px 20)
         , E.height (E.px 20)
-        , Background.color Color.lightBlue2
+        , Background.color Color.lightBlue
         , Font.color Color.palePink
         , View.Utility.elementAttribute "title" "Click to edit this item"
         ]
         (EditItem datum)
+        ""
+
+
+expandCollapse datum =
+    buttonTemplate
+        [ E.width (E.px 20)
+        , E.height (E.px 20)
+        , Background.color Color.lightBlue2
+        , Font.color Color.palePink
+        , View.Utility.elementAttribute "title" "Click to expand/collapse item"
+        ]
+        (ExpandContractItem datum)
         ""
 
 
