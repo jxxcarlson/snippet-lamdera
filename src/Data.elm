@@ -1,11 +1,13 @@
 module Data exposing
     ( DataDict
     , DataFile
+    , DataId
     , Datum
     , filter
     , fixUrls
     , insertDatum
     , make
+    , remove
     , setupUser
     )
 
@@ -14,6 +16,10 @@ import Time
 
 
 type alias Username =
+    String
+
+
+type alias DataId =
     String
 
 
@@ -82,6 +88,23 @@ insertDatum username datum dataDict =
 
         Just dataFile ->
             Dict.insert username { dataFile | data = datum :: dataFile.data } dataDict
+
+
+remove : Username -> DataId -> DataDict -> DataDict
+remove username id dataDict =
+    case Dict.get username dataDict of
+        Nothing ->
+            dataDict
+
+        Just dataFile ->
+            let
+                newData =
+                    List.filter (\datum -> datum.id /= id) dataFile.data
+
+                newDataFile =
+                    { dataFile | data = newData }
+            in
+            Dict.insert username newDataFile dataDict
 
 
 getUrls : String -> List String

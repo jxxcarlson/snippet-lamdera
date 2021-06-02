@@ -76,6 +76,7 @@ viewSnippet model datum =
             [ E.width (E.px <| appWidth_ model)
             , E.height (E.px 100)
             , E.scrollbarY
+            , View.Utility.elementAttribute "line-height" "1.5"
             ]
             [ Markdown.toHtml [] datum.content
                 |> E.html
@@ -139,6 +140,7 @@ signedInHeader model user =
     E.row [ E.spacing 12 ]
         [ Button.signOut user.username
         , Button.save
+        , Button.delete
         ]
 
 

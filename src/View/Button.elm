@@ -1,5 +1,6 @@
 module View.Button exposing
     ( adminPopup
+    , delete
     , editItem
     , getUsers
     , linkTemplate
@@ -74,6 +75,11 @@ signIn =
 save : Element FrontendMsg
 save =
     buttonTemplate [] Save "Save"
+
+
+delete : Element FrontendMsg
+delete =
+    buttonTemplate [] Delete "Delete"
 
 
 editItem datum =

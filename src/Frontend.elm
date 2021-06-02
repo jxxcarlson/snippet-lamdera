@@ -200,6 +200,20 @@ update msg model =
                                     , sendToBackend (UpdateDatum user.username newSnippet)
                                     )
 
+        Delete ->
+            case model.currentSnippet of
+                Nothing ->
+                    ( model, Cmd.none )
+
+                Just snippet ->
+                    ( { model
+                        | currentSnippet = Nothing
+                        , snippetText = ""
+                        , snippets = List.filter (\snip -> snip.id /= snippet.id) model.snippets
+                      }
+                    , sendToBackend (DeleteSnippetFromStore snippet.username snippet.id)
+                    )
+
         EditItem datum ->
             ( { model
                 | message = "Editing " ++ datum.id

@@ -102,6 +102,11 @@ updateFromFrontend sessionId clientId msg model =
                     in
                     ( { model | dataDict = newDataDict }, sendToFrontend clientId (SendMessage <| "Snippet '" ++ String.left 10 datum.title ++ " ... ' updated.") )
 
+        DeleteSnippetFromStore username dataId ->
+            ( { model | dataDict = Data.remove username dataId model.dataDict }
+            , sendToFrontend clientId (SendMessage <| "Item " ++ dataId ++ " removed")
+            )
+
         SendUserData username ->
             case Dict.get username model.dataDict of
                 Nothing ->

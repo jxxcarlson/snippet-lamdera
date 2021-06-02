@@ -4,7 +4,7 @@ import Authentication exposing (AuthenticationDict)
 import Browser exposing (UrlRequest)
 import Browser.Dom as Dom
 import Browser.Navigation exposing (Key)
-import Data exposing (DataDict, Datum)
+import Data exposing (DataDict, DataId, Datum)
 import Http
 import Random
 import Time
@@ -94,6 +94,7 @@ type FrontendMsg
     | InputSnippet String
     | Save
     | EditItem Datum
+    | Delete
     | InputSnippetFilter String
       -- ADMIN
     | AdminRunTask
@@ -109,6 +110,7 @@ type ToBackend
     | SaveDatum Username Datum
     | SendUserData Username
     | UpdateDatum Username Datum
+    | DeleteSnippetFromStore Username DataId
       -- USER
     | SignInOrSignUp String String
 
