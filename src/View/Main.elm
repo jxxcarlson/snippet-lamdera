@@ -75,14 +75,13 @@ viewSnippet model datum =
         , E.spacing 12
         , E.paddingXY 10 10
         , E.width (E.px <| appWidth_ model)
-        , E.height (E.px h)
         , Background.color Color.veryPaleBlue
         ]
         [ View.Utility.cssNode "minilatex.css"
         , E.column [ E.alignTop, E.spacing 8 ] [ E.el [] (Button.editItem datum), Button.expandCollapse datum ]
         , E.column
             [ E.width (E.px <| appWidth_ model)
-            , E.height (E.px 100)
+            , E.height (E.px h)
             , E.scrollbarY
             , E.alignTop
             , E.moveUp 16
