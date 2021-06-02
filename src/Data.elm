@@ -54,7 +54,11 @@ type alias DataDict =
 
 filter : String -> List Datum -> List Datum
 filter filterString data =
-    List.filter (\datum -> String.contains filterString datum.content) data
+    let
+        filterString_ =
+            String.toLower filterString
+    in
+    List.filter (\datum -> String.contains filterString (String.toLower datum.content)) data
 
 
 setupUser : Time.Posix -> Username -> DataDict -> DataDict
