@@ -176,7 +176,7 @@ update msg model =
                                 snippet =
                                     Data.make user.username model.currentTime token model.snippetText
                             in
-                            ( { model | snippets = snippet :: model.snippets }, sendToBackend (SaveDatum user.username snippet) )
+                            ( { model | snippets = snippet :: model.snippets, randomSeed = seed }, sendToBackend (SaveDatum user.username snippet) )
 
                         EditMode ->
                             case model.currentSnippet of
