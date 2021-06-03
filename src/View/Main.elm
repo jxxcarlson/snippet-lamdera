@@ -66,12 +66,22 @@ viewSnippets model =
 viewSnippet : Model -> Datum -> Element FrontendMsg
 viewSnippet model datum =
     let
+        predicate =
+            Just datum.id == Maybe.map .id model.currentSnippet && model.viewMode == Expanded
+
         h =
-            if Just datum.id == Maybe.map .id model.currentSnippet && model.viewMode == Expanded then
+            if predicate then
                 300
 
             else
                 50
+
+        scroll =
+            if predicate then
+                E.scrollbarY
+
+            else
+                E.padding 0
     in
     E.row
         [ Font.size 14
@@ -85,12 +95,12 @@ viewSnippet model datum =
         , E.column
             [ E.width (E.px <| appWidth_ model)
             , E.height (E.px h)
-            , E.scrollbarY
+            , scroll
             , E.alignTop
             , E.moveUp 16
             , View.Utility.elementAttribute "line-height" "1.5"
             ]
-            [ Markdown.toHtml [] (datum.content ++ " T: " ++ String.fromInt (Time.posixToMillis datum.modificationData))
+            [ Markdown.toHtml [] datum.content
                 |> E.html
             ]
         ]
