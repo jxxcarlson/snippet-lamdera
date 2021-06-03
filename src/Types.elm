@@ -103,6 +103,9 @@ type FrontendMsg
     | Delete
     | InputSnippetFilter String
     | ExpandContractItem Datum
+    | RandomOrder
+    | CreationOrder
+    | RandomizedOrder (List Datum)
       -- ADMIN
     | AdminRunTask
     | GetUsers

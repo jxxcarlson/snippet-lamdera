@@ -11,10 +11,12 @@ import Html exposing (Html)
 import Lamdera exposing (sendToBackend)
 import List.Extra
 import Random
+import Random.List
 import Time
 import Token
 import Types exposing (..)
 import Url exposing (Url)
+import Util
 import View.Main
 
 
@@ -161,6 +163,19 @@ update msg model =
 
         InputSnippetFilter str ->
             ( { model | inputSnippetFilter = str }, Cmd.none )
+
+        CreationOrder ->
+            ( { model | snippets = List.sortWith (\a b -> Util.comparePosix a.creationData b.creationData) model.snippets }, Cmd.none )
+
+        RandomOrder ->
+            let
+                { token, seed } =
+                    Token.get model.randomSeed
+            in
+            ( { model | randomSeed = seed }, Random.generate RandomizedOrder (Random.List.shuffle model.snippets) )
+
+        RandomizedOrder snippets_ ->
+            ( { model | snippets = snippets_ }, Cmd.none )
 
         Save ->
             case model.currentUser of

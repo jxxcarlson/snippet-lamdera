@@ -5,10 +5,12 @@ module View.Button exposing
     , expandCollapse
     , getUsers
     , linkTemplate
+    , randomize
     , runTask
     , save
     , signIn
     , signOut
+    , sortByCreationDate
     )
 
 import Config
@@ -71,6 +73,16 @@ signIn =
 
 
 -- DATA
+
+
+randomize : Element FrontendMsg
+randomize =
+    buttonTemplate [ View.Utility.elementAttribute "title" "Randomize snippets" ] RandomOrder "R"
+
+
+sortByCreationDate : Element FrontendMsg
+sortByCreationDate =
+    buttonTemplate [ View.Utility.elementAttribute "title" "Sort by date created" ] CreationOrder "C"
 
 
 save : Element FrontendMsg

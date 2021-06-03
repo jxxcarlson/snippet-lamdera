@@ -36,7 +36,9 @@ mainColumn model =
                 [ E.column [ E.spacing 12 ]
                     [ View.Input.snippetText model (appWidth_ model) model.snippetText
                     , E.row [ E.spacing 8, E.width (E.px (appWidth_ model)) ]
-                        [ View.Input.snippetFilter model (appWidth_ model - 70)
+                        [ View.Input.snippetFilter model (appWidth_ model - 140)
+                        , Button.sortByCreationDate
+                        , Button.randomize
                         , E.el [ Font.color Color.white, Font.size 14, E.alignRight ] (E.text ("N = " ++ String.fromInt (List.length model.snippets)))
                         ]
                     , viewSnippets model
