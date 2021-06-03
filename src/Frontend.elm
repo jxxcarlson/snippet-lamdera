@@ -235,6 +235,7 @@ update msg model =
                     ( { model
                         | currentSnippet = Nothing
                         , snippetText = ""
+                        , appMode = EntryMode
                         , snippets = List.filter (\snip -> snip.id /= snippet.id) model.snippets
                       }
                     , sendToBackend (DeleteSnippetFromStore snippet.username snippet.id)
