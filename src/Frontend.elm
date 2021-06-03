@@ -31,7 +31,7 @@ app =
         , onUrlChange = UrlChanged
         , update = update
         , updateFromBackend = updateFromBackend
-        , subscriptions = \m -> Sub.none
+        , subscriptions = subscriptions
         , view = view
         }
 
@@ -164,8 +164,8 @@ update msg model =
         InputSnippetFilter str ->
             ( { model | inputSnippetFilter = str }, Cmd.none )
 
-        CreationOrder ->
-            ( { model | snippets = List.sortWith (\a b -> Util.comparePosix a.creationData b.creationData) model.snippets }, Cmd.none )
+        ModificationOrder ->
+            ( { model | snippets = List.sortBy (\snip -> -(Time.posixToMillis snip.modificationData)) model.snippets }, Cmd.none )
 
         RandomOrder ->
             let
@@ -209,7 +209,10 @@ update msg model =
                                 Just snippet ->
                                     let
                                         newSnippet =
-                                            { snippet | content = model.snippetText |> Data.fixUrls }
+                                            { snippet
+                                                | content = model.snippetText |> Data.fixUrls
+                                                , modificationData = model.currentTime
+                                            }
 
                                         newSnippets =
                                             List.Extra.setIf (\snip -> snip.id == newSnippet.id) newSnippet model.snippets

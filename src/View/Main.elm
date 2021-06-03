@@ -6,6 +6,7 @@ import Element.Background as Background
 import Element.Font as Font
 import Html exposing (Html)
 import Markdown
+import Time
 import Types exposing (..)
 import View.Button as Button
 import View.Color as Color
@@ -37,7 +38,7 @@ mainColumn model =
                     [ View.Input.snippetText model (appWidth_ model) model.snippetText
                     , E.row [ E.spacing 8, E.width (E.px (appWidth_ model)) ]
                         [ View.Input.snippetFilter model (appWidth_ model - 140)
-                        , Button.sortByCreationDate
+                        , Button.sortByModificationDate
                         , Button.randomize
                         , E.el [ Font.color Color.white, Font.size 14, E.alignRight ] (E.text ("N = " ++ String.fromInt (List.length model.snippets)))
                         ]
@@ -79,8 +80,8 @@ viewSnippet model datum =
         , E.width (E.px <| appWidth_ model)
         , Background.color Color.veryPaleBlue
         ]
-        [ View.Utility.cssNode "minilatex.css"
-        , E.column [ E.alignTop, E.spacing 8 ] [ E.el [] (Button.editItem datum), Button.expandCollapse datum ]
+        [ -- View.Utility.cssNode "minilatex.css"
+          E.column [ E.alignTop, E.spacing 8 ] [ E.el [] (Button.editItem datum), Button.expandCollapse datum ]
         , E.column
             [ E.width (E.px <| appWidth_ model)
             , E.height (E.px h)
@@ -89,7 +90,7 @@ viewSnippet model datum =
             , E.moveUp 16
             , View.Utility.elementAttribute "line-height" "1.5"
             ]
-            [ Markdown.toHtml [] datum.content
+            [ Markdown.toHtml [] (datum.content ++ " T: " ++ String.fromInt (Time.posixToMillis datum.modificationData))
                 |> E.html
             ]
         ]

@@ -104,7 +104,7 @@ type FrontendMsg
     | InputSnippetFilter String
     | ExpandContractItem Datum
     | RandomOrder
-    | CreationOrder
+    | ModificationOrder
     | RandomizedOrder (List Datum)
       -- ADMIN
     | AdminRunTask

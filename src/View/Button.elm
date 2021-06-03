@@ -10,7 +10,7 @@ module View.Button exposing
     , save
     , signIn
     , signOut
-    , sortByCreationDate
+    , sortByModificationDate
     )
 
 import Config
@@ -80,9 +80,8 @@ randomize =
     buttonTemplate [ View.Utility.elementAttribute "title" "Randomize snippets" ] RandomOrder "R"
 
 
-sortByCreationDate : Element FrontendMsg
-sortByCreationDate =
-    buttonTemplate [ View.Utility.elementAttribute "title" "Sort by date created" ] CreationOrder "C"
+sortByModificationDate =
+    buttonTemplate [ View.Utility.elementAttribute "title" "Sort by date modified" ] ModificationOrder "M"
 
 
 save : Element FrontendMsg
