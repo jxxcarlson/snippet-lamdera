@@ -68,7 +68,7 @@ viewSnippet model datum =
                 300
 
             else
-                100
+                50
     in
     E.row
         [ Font.size 14
