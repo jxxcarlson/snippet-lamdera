@@ -81,7 +81,7 @@ viewSnippet model datum =
                 E.scrollbarY
 
             else
-                E.padding 0
+                E.clipY
     in
     E.row
         [ Font.size 14
