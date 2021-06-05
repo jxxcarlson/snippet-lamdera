@@ -64,7 +64,7 @@ filter filterString data =
         filterString_ =
             String.toLower filterString
     in
-    List.filter (\datum -> String.contains filterString (String.toLower datum.content)) data
+    List.filter (\datum -> String.contains filterString_ (String.toLower datum.content)) data
 
 
 setupUser : Time.Posix -> Username -> DataDict -> DataDict
