@@ -1,3 +1,3 @@
-# Auth Starter App
+# Snippet App
 
-A starter app for Lamdera that has basic user authorization.
+An app for keeping track of snippets of text.
