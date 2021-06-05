@@ -130,8 +130,7 @@ fixUrl url str =
         link =
             " [" ++ label ++ "](" ++ url ++ ")"
     in
-    -- String.replace (" " ++ url ++ " ") link str
-    String.replace (" " ++ url) link str
+     String.replace url link str
 
 
 fixUrls : String -> String
