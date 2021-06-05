@@ -5,7 +5,8 @@ import Element as E exposing (Element)
 import Element.Background as Background
 import Element.Font as Font
 import Html exposing (Html)
-import Markdown
+import Markdown.Option
+import Markdown.Render
 import Time
 import Types exposing (..)
 import View.Button as Button
@@ -37,7 +38,7 @@ mainColumn model =
                 [ E.column [ E.spacing 12 ]
                     [ View.Input.snippetText model (appWidth_ model) model.snippetText
                     , E.row [ E.spacing 8, E.width (E.px (appWidth_ model)) ]
-                        [ View.Input.snippetFilter model (appWidth_ model - 140)
+                        [ View.Input.snippetFilter model (appWidth_ model - 150)
                         , Button.sortByModificationDate
                         , Button.randomize
                         , E.el [ Font.color Color.white, Font.size 14, E.alignRight ] (E.text ("N = " ++ String.fromInt (List.length model.snippets)))
@@ -74,7 +75,7 @@ viewSnippet model datum =
                 300
 
             else
-                50
+                60
 
         scroll =
             if predicate then
@@ -86,21 +87,24 @@ viewSnippet model datum =
     E.row
         [ Font.size 14
         , E.spacing 12
-        , E.paddingXY 10 10
+        , E.paddingEach { top = 10, left = 10, right = 10, bottom = 0 }
         , E.width (E.px <| appWidth_ model)
         , Background.color Color.veryPaleBlue
         ]
-        [ -- View.Utility.cssNode "minilatex.css"
-          E.column [ E.alignTop, E.spacing 8 ] [ E.el [] (Button.editItem datum), Button.expandCollapse datum ]
+        [ View.Utility.cssNode "markdown.css"
+        , E.column [ E.alignTop, E.spacing 8 ] [ E.el [] (Button.editItem datum), Button.expandCollapse datum ]
         , E.column
             [ E.width (E.px <| appWidth_ model)
             , E.height (E.px h)
             , scroll
             , E.alignTop
             , E.moveUp 16
+
+            -- , Background.color Color.white
             , View.Utility.elementAttribute "line-height" "1.5"
             ]
-            [ Markdown.toHtml [] datum.content
+            [ Markdown.Render.toHtml Markdown.Option.ExtendedMath datum.content
+                |> Html.map MarkdownMsg
                 |> E.html
             ]
         ]

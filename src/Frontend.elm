@@ -268,6 +268,9 @@ update msg model =
             , Cmd.none
             )
 
+        MarkdownMsg _ ->
+            ( model, Cmd.none )
+
         -- ADMIN
         AdminRunTask ->
             ( model, sendToBackend RunTask )

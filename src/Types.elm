@@ -6,6 +6,7 @@ import Browser.Dom as Dom
 import Browser.Navigation exposing (Key)
 import Data exposing (DataDict, DataId, Datum)
 import Http
+import Markdown.Render
 import Random
 import Time
 import Url exposing (Url)
@@ -106,6 +107,7 @@ type FrontendMsg
     | RandomOrder
     | ModificationOrder
     | RandomizedOrder (List Datum)
+    | MarkdownMsg Markdown.Render.MarkdownMsg
       -- ADMIN
     | AdminRunTask
     | GetUsers
