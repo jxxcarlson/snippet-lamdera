@@ -120,7 +120,7 @@ footer model =
         , E.inFront (View.Popup.admin model)
         ]
         [ Button.adminPopup model
-        , View.Utility.showIfIsAdmin model Button.runTask
+        , Button.exportYaml
         , messageRow model
         ]
 

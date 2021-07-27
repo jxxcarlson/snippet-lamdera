@@ -108,6 +108,7 @@ type FrontendMsg
     | ModificationOrder
     | RandomizedOrder (List Datum)
     | MarkdownMsg Markdown.Render.MarkdownMsg
+    | ExportYaml
       -- ADMIN
     | AdminRunTask
     | GetUsers

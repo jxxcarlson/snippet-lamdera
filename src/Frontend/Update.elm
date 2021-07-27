@@ -1,8 +1,10 @@
-module Frontend.Update exposing (updateWithViewport)
+module Frontend.Update exposing (exportSnippets, updateWithViewport)
 
+import File.Download as Download
 import Lamdera exposing (sendToBackend)
 import List.Extra
 import Types exposing (..)
+import Yaml
 
 
 updateWithViewport vp model =
@@ -19,3 +21,8 @@ updateWithViewport vp model =
       }
     , Cmd.none
     )
+
+
+exportSnippets : FrontendModel -> Cmd msg
+exportSnippets model =
+    Download.string "snippets.yaml" "text/yaml" (Yaml.encodeData model.snippets)

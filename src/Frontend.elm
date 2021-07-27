@@ -5,6 +5,7 @@ import Browser exposing (UrlRequest(..))
 import Browser.Events
 import Browser.Navigation as Nav
 import Data
+import File.Download as Download
 import Frontend.Cmd
 import Frontend.Update
 import Html exposing (Html)
@@ -270,6 +271,9 @@ update msg model =
 
         MarkdownMsg _ ->
             ( model, Cmd.none )
+
+        ExportYaml ->
+            ( model, Frontend.Update.exportSnippets model )
 
         -- ADMIN
         AdminRunTask ->

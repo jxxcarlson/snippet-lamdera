@@ -3,6 +3,7 @@ module View.Button exposing
     , delete
     , editItem
     , expandCollapse
+    , exportYaml
     , getUsers
     , linkTemplate
     , randomize
@@ -92,6 +93,11 @@ save =
 delete : Element FrontendMsg
 delete =
     buttonTemplate [] Delete "Delete"
+
+
+exportYaml : Element FrontendMsg
+exportYaml =
+    buttonTemplate [] ExportYaml "Export"
 
 
 editItem datum =
