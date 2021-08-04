@@ -6,6 +6,7 @@ import Backend.Update
 import Data
 import Dict
 import Lamdera exposing (ClientId, SessionId, broadcast, sendToFrontend)
+import List.Extra
 import Random
 import Time
 import Types exposing (..)
@@ -34,7 +35,7 @@ init =
     ( { message = "Hello!"
 
       -- RANDOM
-      , randomSeed = Random.initialSeed 1234
+      , randomSeed = Random.initialSeed 12034
       , randomAtmosphericInt = Nothing
       , currentTime = Time.millisToPosix 0
 
@@ -69,6 +70,7 @@ updateFromFrontend sessionId clientId msg model =
         RunTask ->
             ( model, Cmd.none )
 
+        -- DATA
         SaveDatum username datum ->
             let
                 dataDict =
@@ -83,6 +85,27 @@ updateFromFrontend sessionId clientId msg model =
                             "Datum saved, items = " ++ String.fromInt (List.length dataFile.data)
             in
             ( { model | dataDict = dataDict }, sendToFrontend clientId (SendMessage message) )
+
+        UpdateDatum username datum ->
+            case Dict.get username model.dataDict of
+                Nothing ->
+                    ( model, sendToFrontend clientId (SendMessage "Can't update: no datafile") )
+
+                Just dataFile ->
+                    let
+                        newData : List Data.Datum
+                        newData =
+                            List.Extra.setIf (\snip -> snip.id == datum.id) datum dataFile.data
+
+                        newDataDict =
+                            Dict.insert username { dataFile | data = newData } model.dataDict
+                    in
+                    ( { model | dataDict = newDataDict }, sendToFrontend clientId (SendMessage <| "Snippet '" ++ String.left 10 datum.title ++ " ... ' updated.") )
+
+        DeleteSnippetFromStore username dataId ->
+            ( { model | dataDict = Data.remove username dataId model.dataDict }
+            , sendToFrontend clientId (SendMessage <| "Item " ++ dataId ++ " removed")
+            )
 
         SendUserData username ->
             case Dict.get username model.dataDict of
@@ -103,7 +126,11 @@ updateFromFrontend sessionId clientId msg model =
                         ( model
                         , Cmd.batch
                             [ sendToFrontend clientId (SendUser userData.user)
-                            , sendToFrontend clientId (SendMessage "Success! You are signed in.")
+                            , sendToFrontend clientId
+                                (SendMessage <|
+                                    "Success! Random atmospheric integer: "
+                                        ++ (Maybe.map String.fromInt model.randomAtmosphericInt |> Maybe.withDefault "NONE")
+                                )
                             , Backend.Cmd.sendUserData username clientId model
                             ]
                         )

@@ -1,60 +1,26 @@
-module Types exposing (..)
+module Evergreen.V19.Types exposing (..)
 
-import Authentication exposing (AuthenticationDict)
-import Browser exposing (UrlRequest)
-import Browser.Dom as Dom
-import Browser.Navigation exposing (Key)
-import Data exposing (DataDict, DataId, Datum)
+import Browser
+import Browser.Dom
+import Browser.Navigation
+import Evergreen.V19.Authentication
+import Evergreen.V19.Data
+import Evergreen.V19.User
 import Http
 import Markdown.Render
 import Random
 import Time
-import Url exposing (Url)
-import User exposing (User)
-
-
-type alias Username =
-    String
-
-
-type alias FrontendModel =
-    { key : Key
-    , url : Url
-    , message : String
-    , currentTime : Time.Posix
-    , randomSeed : Random.Seed
-    , appMode : AppMode
-
-    -- ADMIN
-    , users : List User
-
-    -- USER
-    , currentUser : Maybe User
-    , inputUsername : String
-    , inputPassword : String
-
-    -- DATA
-    , snippetText : String
-    , snippets : List Datum
-    , currentSnippet : Maybe Datum
-    , inputSnippetFilter : String
-    , viewMode : ViewMode
-
-    -- UI
-    , windowWidth : Int
-    , windowHeight : Int
-    , popupStatus : PopupStatus
-    }
-
-
-type ViewMode
-    = Expanded
-    | Collapsed
+import Url
 
 
 type AppMode
     = EntryMode
     | EditMode
+
+
+type ViewMode
+    = Expanded
+    | Collapsed
 
 
 type PopupWindow
@@ -66,65 +32,77 @@ type PopupStatus
     | PopupClosed
 
 
+type alias FrontendModel =
+    { key : Browser.Navigation.Key
+    , url : Url.Url
+    , message : String
+    , currentTime : Time.Posix
+    , randomSeed : Random.Seed
+    , appMode : AppMode
+    , users : List Evergreen.V19.User.User
+    , currentUser : Maybe Evergreen.V19.User.User
+    , inputUsername : String
+    , inputPassword : String
+    , snippetText : String
+    , snippets : List Evergreen.V19.Data.Datum
+    , currentSnippet : Maybe Evergreen.V19.Data.Datum
+    , inputSnippetFilter : String
+    , viewMode : ViewMode
+    , windowWidth : Int
+    , windowHeight : Int
+    , popupStatus : PopupStatus
+    }
+
+
 type alias BackendModel =
     { message : String
-
-    -- SYSTEM
     , randomSeed : Random.Seed
     , randomAtmosphericInt : Maybe Int
     , currentTime : Time.Posix
-
-    -- DATA
-    , dataDict : DataDict
-
-    -- USER
-    , authenticationDict : AuthenticationDict
+    , dataDict : Evergreen.V19.Data.DataDict
+    , authenticationDict : Evergreen.V19.Authentication.AuthenticationDict
     }
 
 
 type FrontendMsg
-    = UrlClicked UrlRequest
-    | UrlChanged Url
-    | GotViewport Dom.Viewport
+    = UrlClicked Browser.UrlRequest
+    | UrlChanged Url.Url
+    | GotViewport Browser.Dom.Viewport
     | NoOpFrontendMsg
     | FETick Time.Posix
     | GotAtomsphericRandomNumberFE (Result Http.Error String)
-      -- UI
     | GotNewWindowDimensions Int Int
     | ChangePopupStatus PopupStatus
-      -- USER
     | SignIn
     | SignOut
     | InputUsername String
     | InputPassword String
-      -- DATA
     | InputSnippet String
     | Save
-    | EditItem Datum
+    | EditItem Evergreen.V19.Data.Datum
     | Delete
     | InputSnippetFilter String
-    | ExpandContractItem Datum
+    | ExpandContractItem Evergreen.V19.Data.Datum
     | RandomOrder
     | ModificationOrder
-    | RandomizedOrder (List Datum)
+    | RandomizedOrder (List Evergreen.V19.Data.Datum)
     | MarkdownMsg Markdown.Render.MarkdownMsg
-    | ExportYaml
-      -- ADMIN
     | AdminRunTask
     | GetUsers
 
 
+type alias Username =
+    String
+
+
 type ToBackend
     = NoOpToBackend
-      -- ADMIN
     | RunTask
     | SendUsers
-      -- DATA
-    | SaveDatum Username Datum
+    | SaveDatum Username Evergreen.V19.Data.Datum
     | SendUserData Username
-    | UpdateDatum Username Datum
-    | DeleteSnippetFromStore Username DataId
-      -- USER
+    | UpdateDatum Username Evergreen.V19.Data.Datum
+    | DeleteSnippetFromStore Username Evergreen.V19.Data.DataId
     | SignInOrSignUp String String
 
 
@@ -137,9 +115,6 @@ type BackendMsg
 type ToFrontend
     = NoOpToFrontend
     | SendMessage String
-      -- ADMIN
-    | GotUsers (List User)
-      -- DATA
-    | GotUserData (List Datum)
-      -- USER
-    | SendUser User
+    | GotUsers (List Evergreen.V19.User.User)
+    | GotUserData (List Evergreen.V19.Data.Datum)
+    | SendUser Evergreen.V19.User.User

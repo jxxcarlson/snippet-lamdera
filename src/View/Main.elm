@@ -5,6 +5,9 @@ import Element as E exposing (Element)
 import Element.Background as Background
 import Element.Font as Font
 import Html exposing (Html)
+import Markdown.Option
+import Markdown.Render
+import Time
 import Types exposing (..)
 import View.Button as Button
 import View.Color as Color
@@ -21,7 +24,7 @@ type alias Model =
 view : Model -> Html FrontendMsg
 view model =
     E.layoutWith { options = [ E.focusStyle View.Utility.noFocus ] }
-        [ View.Style.bgGray 0.9, E.clipX, E.clipY ]
+        [ View.Style.bgGray 0.2, E.clipX, E.clipY ]
         (mainColumn model)
 
 
@@ -29,13 +32,18 @@ mainColumn : Model -> Element FrontendMsg
 mainColumn model =
     E.column (mainColumnStyle model)
         [ E.column [ E.spacing 12, E.width (E.px <| appWidth_ model), E.height (E.px (appHeight_ model)) ]
-            [ title "App"
+            [ title "Snippet Manager"
             , header model
             , E.column [ E.spacing 12 ]
                 [ E.column [ E.spacing 12 ]
-                    [ View.Input.snippetText (appWidth_ model) model.snippetText
-                    , viewSnippets
-                        model
+                    [ View.Input.snippetText model (appWidth_ model) model.snippetText
+                    , E.row [ E.spacing 8, E.width (E.px (appWidth_ model)) ]
+                        [ View.Input.snippetFilter model (appWidth_ model - 150)
+                        , Button.sortByModificationDate
+                        , Button.randomize
+                        , E.el [ Font.color Color.white, Font.size 14, E.alignRight ] (E.text ("N = " ++ String.fromInt (List.length model.snippets)))
+                        ]
+                    , viewSnippets model
                     ]
                 ]
             , footer model
@@ -43,24 +51,63 @@ mainColumn model =
         ]
 
 
+viewSnippets : Model -> Element FrontendMsg
 viewSnippets model =
-    E.column [ E.spacing 12, E.paddingXY 0 20, E.width (E.px <| appWidth_ model), E.height (E.px (appHeight_ model - 350)), Background.color Color.darkBlue ]
-        (List.map (viewSnippet model) model.snippets)
+    E.column
+        [ E.spacing 12
+        , E.paddingXY 0 0
+        , E.scrollbarY
+        , E.width (E.px <| appWidth_ model)
+        , E.height (E.px (appHeight_ model - 270))
+        , Background.color Color.darkBlue
+        ]
+        (List.map (viewSnippet model) (Data.filter model.inputSnippetFilter model.snippets))
 
 
 viewSnippet : Model -> Datum -> Element FrontendMsg
 viewSnippet model datum =
-    E.column
+    let
+        predicate =
+            Just datum.id == Maybe.map .id model.currentSnippet && model.viewMode == Expanded
+
+        h =
+            if predicate then
+                300
+
+            else
+                60
+
+        scroll =
+            if predicate then
+                E.scrollbarY
+
+            else
+                E.clipY
+    in
+    E.row
         [ Font.size 14
         , E.spacing 12
-        , E.paddingXY 10 10
-        , E.centerX
-        , E.scrollbarY
-        , E.width (E.px <| appWidth_ model - 40)
-        , E.height (E.px 100)
+        , E.paddingEach { top = 10, left = 10, right = 10, bottom = 0 }
+        , E.width (E.px <| appWidth_ model)
         , Background.color Color.veryPaleBlue
         ]
-        [ E.text datum.content ]
+        [ View.Utility.cssNode "markdown.css"
+        , E.column [ E.alignTop, E.spacing 8 ] [ E.el [] (Button.editItem datum), Button.expandCollapse datum ]
+        , E.column
+            [ E.width (E.px <| appWidth_ model)
+            , E.height (E.px h)
+            , scroll
+            , E.alignTop
+            , E.moveUp 16
+
+            -- , Background.color Color.white
+            , View.Utility.elementAttribute "line-height" "1.5"
+            ]
+            [ Markdown.Render.toHtml Markdown.Option.ExtendedMath datum.content
+                |> Html.map MarkdownMsg
+                |> E.html
+            ]
+        ]
 
 
 footer model =
@@ -73,7 +120,7 @@ footer model =
         , E.inFront (View.Popup.admin model)
         ]
         [ Button.adminPopup model
-        , View.Utility.showIfIsAdmin model Button.runTask
+        , Button.exportYaml
         , messageRow model
         ]
 
@@ -119,6 +166,7 @@ signedInHeader model user =
     E.row [ E.spacing 12 ]
         [ Button.signOut user.username
         , Button.save
+        , Button.delete
         ]
 
 
@@ -206,4 +254,4 @@ mainColumnStyle model =
 
 title : String -> Element msg
 title str =
-    E.row [ E.centerX, View.Style.fgGray 0.9 ] [ E.text str ]
+    E.row [ E.paddingEach { top = 0, bottom = 8, left = 0, right = 0 }, E.centerX, View.Style.fgGray 0.9 ] [ E.text str ]

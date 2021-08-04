@@ -1,11 +1,17 @@
 module View.Button exposing
     ( adminPopup
+    , delete
+    , editItem
+    , expandCollapse
+    , exportYaml
     , getUsers
     , linkTemplate
+    , randomize
     , runTask
     , save
     , signIn
     , signOut
+    , sortByModificationDate
     )
 
 import Config
@@ -70,9 +76,52 @@ signIn =
 -- DATA
 
 
+randomize : Element FrontendMsg
+randomize =
+    buttonTemplate [ View.Utility.elementAttribute "title" "Randomize snippets" ] RandomOrder "R"
+
+
+sortByModificationDate =
+    buttonTemplate [ View.Utility.elementAttribute "title" "Sort by date modified" ] ModificationOrder "M"
+
+
 save : Element FrontendMsg
 save =
     buttonTemplate [] Save "Save"
+
+
+delete : Element FrontendMsg
+delete =
+    buttonTemplate [] Delete "Delete"
+
+
+exportYaml : Element FrontendMsg
+exportYaml =
+    buttonTemplate [] ExportYaml "Export"
+
+
+editItem datum =
+    buttonTemplate
+        [ E.width (E.px 20)
+        , E.height (E.px 20)
+        , Background.color Color.lightBlue
+        , Font.color Color.palePink
+        , View.Utility.elementAttribute "title" "Click to edit this item"
+        ]
+        (EditItem datum)
+        ""
+
+
+expandCollapse datum =
+    buttonTemplate
+        [ E.width (E.px 20)
+        , E.height (E.px 20)
+        , Background.color Color.lightBlue2
+        , Font.color Color.palePink
+        , View.Utility.elementAttribute "title" "Click to expand/collapse item"
+        ]
+        (ExpandContractItem datum)
+        ""
 
 
 

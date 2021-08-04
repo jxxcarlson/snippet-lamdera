@@ -5,15 +5,19 @@ import Browser exposing (UrlRequest(..))
 import Browser.Events
 import Browser.Navigation as Nav
 import Data
+import File.Download as Download
 import Frontend.Cmd
 import Frontend.Update
 import Html exposing (Html)
 import Lamdera exposing (sendToBackend)
+import List.Extra
 import Random
+import Random.List
 import Time
 import Token
 import Types exposing (..)
 import Url exposing (Url)
+import Util
 import View.Main
 
 
@@ -28,7 +32,7 @@ app =
         , onUrlChange = UrlChanged
         , update = update
         , updateFromBackend = updateFromBackend
-        , subscriptions = \m -> Sub.none
+        , subscriptions = subscriptions
         , view = view
         }
 
@@ -47,6 +51,7 @@ init url key =
       , message = "Welcome!"
       , currentTime = Time.millisToPosix 0
       , randomSeed = Random.initialSeed 1234
+      , appMode = EntryMode
 
       -- ADMIN
       , users = []
@@ -59,6 +64,9 @@ init url key =
       -- DATA
       , snippetText = ""
       , snippets = []
+      , currentSnippet = Nothing
+      , inputSnippetFilter = ""
+      , viewMode = Collapsed
 
       -- USER
       , currentUser = Nothing
@@ -144,6 +152,8 @@ update msg model =
                 , message = "Signed out"
                 , inputUsername = ""
                 , inputPassword = ""
+                , snippetText = ""
+                , snippets = []
               }
             , Cmd.none
             )
@@ -152,20 +162,118 @@ update msg model =
         InputSnippet str ->
             ( { model | snippetText = str }, Cmd.none )
 
+        InputSnippetFilter str ->
+            ( { model | inputSnippetFilter = str }, Cmd.none )
+
+        ModificationOrder ->
+            ( { model | snippets = List.sortBy (\snip -> -(Time.posixToMillis snip.modificationData)) model.snippets }, Cmd.none )
+
+        RandomOrder ->
+            let
+                { token, seed } =
+                    Token.get model.randomSeed
+            in
+            ( { model | randomSeed = seed }, Random.generate RandomizedOrder (Random.List.shuffle model.snippets) )
+
+        RandomizedOrder snippets_ ->
+            ( { model | snippets = snippets_ }, Cmd.none )
+
         Save ->
             case model.currentUser of
                 Nothing ->
                     ( model, Cmd.none )
 
                 Just user ->
-                    let
-                        { token, seed } =
-                            Token.get model.randomSeed
+                    case model.appMode of
+                        EntryMode ->
+                            let
+                                { token, seed } =
+                                    Token.get model.randomSeed
 
-                        snippet =
-                            Data.make user.username model.currentTime token model.snippetText
-                    in
-                    ( { model | snippets = snippet :: model.snippets }, sendToBackend (SaveDatum user.username snippet) )
+                                snippet =
+                                    Data.make user.username model.currentTime token model.snippetText
+                            in
+                            ( { model
+                                | snippets = snippet :: model.snippets
+                                , randomSeed = seed
+                                , currentSnippet = Nothing
+                                , snippetText = ""
+                              }
+                            , sendToBackend (SaveDatum user.username snippet)
+                            )
+
+                        EditMode ->
+                            case model.currentSnippet of
+                                Nothing ->
+                                    ( model, Cmd.none )
+
+                                Just snippet ->
+                                    let
+                                        newSnippet =
+                                            { snippet
+                                                | content = model.snippetText |> Data.fixUrls
+                                                , modificationData = model.currentTime
+                                            }
+
+                                        newSnippets =
+                                            List.Extra.setIf (\snip -> snip.id == newSnippet.id) newSnippet model.snippets
+                                    in
+                                    ( { model
+                                        | snippets = newSnippets
+                                        , appMode = EntryMode
+                                        , currentSnippet = Nothing
+                                        , snippetText = ""
+                                      }
+                                    , sendToBackend (UpdateDatum user.username newSnippet)
+                                    )
+
+        Delete ->
+            case model.currentSnippet of
+                Nothing ->
+                    ( model, Cmd.none )
+
+                Just snippet ->
+                    ( { model
+                        | currentSnippet = Nothing
+                        , snippetText = ""
+                        , appMode = EntryMode
+                        , snippets = List.filter (\snip -> snip.id /= snippet.id) model.snippets
+                      }
+                    , sendToBackend (DeleteSnippetFromStore snippet.username snippet.id)
+                    )
+
+        EditItem datum ->
+            ( { model
+                | message = "Editing " ++ datum.id
+                , currentSnippet = Just datum
+                , snippetText = datum.content
+                , appMode = EditMode
+              }
+            , Cmd.none
+            )
+
+        ExpandContractItem datum ->
+            let
+                toggleViewMode mode =
+                    case mode of
+                        Expanded ->
+                            Collapsed
+
+                        Collapsed ->
+                            Expanded
+            in
+            ( { model
+                | currentSnippet = Just datum
+                , viewMode = toggleViewMode model.viewMode
+              }
+            , Cmd.none
+            )
+
+        MarkdownMsg _ ->
+            ( model, Cmd.none )
+
+        ExportYaml ->
+            ( model, Frontend.Update.exportSnippets model )
 
         -- ADMIN
         AdminRunTask ->

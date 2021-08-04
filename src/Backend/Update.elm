@@ -39,11 +39,11 @@ gotAtomsphericRandomNumber model result =
                         | randomAtmosphericInt = Just rn
                         , randomSeed = newRandomSeed
                       }
-                    , Cmd.none
+                    , broadcast (SendMessage <| "Got random atmospheric integer: " ++ String.fromInt rn)
                     )
 
         Err _ ->
-            ( model, Cmd.none )
+            ( model, broadcast (SendMessage "Could not get random atmospheric integer")  )
 
 
 
@@ -54,7 +54,7 @@ setupUser : Model -> ClientId -> String -> String -> ( BackendModel, Cmd Backend
 setupUser model clientId username transitPassword =
     let
         ( randInt, seed ) =
-            Random.step (Random.int (Random.minInt // 2) Random.maxInt) model.randomSeed
+            Random.step (Random.int (Random.minInt // 2) (Random.maxInt - 1000)) model.randomSeed
 
         randomHex =
             Hex.toString randInt |> String.toUpper
