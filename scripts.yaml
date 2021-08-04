@@ -1,5 +1,5 @@
 scripts:
 
-  update-vendor: cp -r ../cayatex/src vendor/cayatex/
+  update-vendor: cp -r ../elm-search/src vendor/search/
 
-  cloc: cloc --by-file --exclude-dir=Evergreen src/
+  cloc: cloc --bycd-file --exclude-dir=Evergreen src/
