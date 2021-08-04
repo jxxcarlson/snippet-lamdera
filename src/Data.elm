@@ -12,6 +12,7 @@ module Data exposing
     )
 
 import Dict exposing (Dict)
+import Search exposing (SearchConfig(..))
 import Time
 
 
@@ -58,8 +59,17 @@ type alias DataDict =
     Dict Username DataFile
 
 
+transformer { title, creationData } =
+    { targetContent = title, targetDate = creationData }
+
+
 filter : String -> List Datum -> List Datum
 filter filterString data =
+    Search.search transformer NotCaseSensitive filterString data
+
+
+filter1 : String -> List Datum -> List Datum
+filter1 filterString data =
     let
         filterString_ =
             String.toLower filterString
@@ -130,7 +140,7 @@ fixUrl url str =
         link =
             " [" ++ label ++ "](" ++ url ++ ")"
     in
-     String.replace url link str
+    String.replace url link str
 
 
 fixUrls : String -> String
