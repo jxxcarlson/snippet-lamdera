@@ -60,7 +60,7 @@ linkStyle =
 
 
 signOut username =
-    buttonTemplate [] SignOut username
+    buttonTemplate [] SignOut ("Sign out " ++ username)
 
 
 
