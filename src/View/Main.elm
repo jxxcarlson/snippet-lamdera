@@ -30,6 +30,19 @@ view model =
 
 mainColumn : Model -> Element FrontendMsg
 mainColumn model =
+    let
+        filteredSnippets =
+            Data.filter model.inputSnippetFilter model.snippets
+
+        numberOfSnippets =
+            String.fromInt (List.length model.snippets)
+
+        numberOfFilteredSnippets =
+            String.fromInt (List.length filteredSnippets)
+
+        ratio =
+            numberOfFilteredSnippets ++ "/" ++ numberOfSnippets
+    in
     E.column (mainColumnStyle model)
         [ E.column [ E.spacing 12, E.width (E.px <| appWidth_ model), E.height (E.px (appHeight_ model)) ]
             [ title "Snippet Manager"
@@ -41,9 +54,9 @@ mainColumn model =
                         [ View.Input.snippetFilter model (appWidth_ model - 150)
                         , Button.sortByModificationDate
                         , Button.randomize
-                        , E.el [ Font.color Color.white, Font.size 14, E.alignRight ] (E.text ("N = " ++ String.fromInt (List.length model.snippets)))
+                        , E.el [ Font.color Color.white, Font.size 14, E.alignRight ] (E.text ratio)
                         ]
-                    , viewSnippets model
+                    , viewSnippets model filteredSnippets
                     ]
                 ]
             , footer model
@@ -51,8 +64,12 @@ mainColumn model =
         ]
 
 
-viewSnippets : Model -> Element FrontendMsg
-viewSnippets model =
+
+-- (List.map (viewSnippet model)
+
+
+viewSnippets : Model -> List Datum -> Element FrontendMsg
+viewSnippets model filteredSnippets =
     E.column
         [ E.spacing 12
         , E.paddingXY 0 0
@@ -61,7 +78,7 @@ viewSnippets model =
         , E.height (E.px (appHeight_ model - 270))
         , Background.color Color.darkBlue
         ]
-        (List.map (viewSnippet model) (Data.filter model.inputSnippetFilter model.snippets))
+        (List.map (viewSnippet model) filteredSnippets)
 
 
 viewSnippet : Model -> Datum -> Element FrontendMsg
