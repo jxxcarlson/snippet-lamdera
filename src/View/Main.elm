@@ -32,7 +32,7 @@ mainColumn : Model -> Element FrontendMsg
 mainColumn model =
     let
         filteredSnippets =
-            Data.filter model.inputSnippetFilter model.snippets
+            Data.filter (String.trim model.inputSnippetFilter) model.snippets
 
         numberOfSnippets =
             String.fromInt (List.length model.snippets)

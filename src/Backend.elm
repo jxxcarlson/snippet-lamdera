@@ -131,7 +131,7 @@ updateFromFrontend sessionId clientId msg model =
                                     "Success! Random atmospheric integer: "
                                         ++ (Maybe.map String.fromInt model.randomAtmosphericInt |> Maybe.withDefault "NONE")
                                 )
-                            , Backend.Cmd.sendUserData username clientId model
+                            , Backend.Cmd.sendUserData Infinity username clientId model
                             ]
                         )
 

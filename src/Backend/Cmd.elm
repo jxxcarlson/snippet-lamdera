@@ -31,10 +31,16 @@ randomNumberUrl maxDigits =
     prefix ++ String.fromInt maxNumber ++ suffix
 
 
-sendUserData username clientId model =
+sendUserData : ExtendedInteger -> String -> Lamdera.ClientId -> BackendModel -> Cmd BackendMsg
+sendUserData limit username clientId model =
     case Dict.get username model.dataDict of
         Nothing ->
             sendToFrontend clientId (SendMessage "No data!")
 
         Just dataFile ->
-            sendToFrontend clientId (GotUserData dataFile.data)
+            case limit of
+                Infinity ->
+                    sendToFrontend clientId (GotUserData dataFile.data)
+
+                Finite n ->
+                    sendToFrontend clientId (GotUserData (List.take n dataFile.data))

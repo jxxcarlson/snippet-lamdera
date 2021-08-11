@@ -143,3 +143,8 @@ type ToFrontend
     | GotUserData (List Datum)
       -- USER
     | SendUser User
+
+
+type ExtendedInteger
+    = Finite Int
+    | Infinity
