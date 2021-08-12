@@ -165,6 +165,9 @@ update msg model =
         InputSnippetFilter str ->
             ( { model | inputSnippetFilter = str }, Cmd.none )
 
+        SearchBy str ->
+            ( { model | inputSnippetFilter = str }, Cmd.none )
+
         ModificationOrder ->
             ( { model | snippets = List.sortBy (\snip -> -(Time.posixToMillis snip.modificationData)) model.snippets }, Cmd.none )
 

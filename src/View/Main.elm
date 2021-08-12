@@ -51,7 +51,8 @@ mainColumn model =
                 [ E.column [ E.spacing 12 ]
                     [ View.Input.snippetText model (appWidth_ model) model.snippetText
                     , E.row [ E.spacing 8, E.width (E.px (appWidth_ model)) ]
-                        [ View.Input.snippetFilter model (appWidth_ model - 150)
+                        [ View.Input.snippetFilter model (appWidth_ model - 190)
+                        , Button.searchByStarred
                         , Button.sortByModificationDate
                         , Button.randomize
                         , E.el [ Font.color Color.white, Font.size 14, E.alignRight ] (E.text ratio)

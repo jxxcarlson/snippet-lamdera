@@ -99,6 +99,7 @@ type FrontendMsg
     | InputPassword String
       -- DATA
     | InputSnippet String
+    | SearchBy String
     | Save
     | EditItem Datum
     | Delete

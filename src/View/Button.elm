@@ -9,6 +9,7 @@ module View.Button exposing
     , randomize
     , runTask
     , save
+    , searchByStarred
     , signIn
     , signOut
     , sortByModificationDate
@@ -83,6 +84,11 @@ randomize =
 
 sortByModificationDate =
     buttonTemplate [ View.Utility.elementAttribute "title" "Sort by date modified" ] ModificationOrder "M"
+
+
+searchByStarred : Element FrontendMsg
+searchByStarred =
+    buttonTemplate [ View.Utility.elementAttribute "title" "Search by ★" ] (SearchBy "★") "★"
 
 
 save : Element FrontendMsg
