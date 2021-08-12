@@ -13,6 +13,7 @@ module View.Button exposing
     , signIn
     , signOut
     , sortByModificationDate
+    , starSnippet
     )
 
 import Config
@@ -89,6 +90,11 @@ sortByModificationDate =
 searchByStarred : Element FrontendMsg
 searchByStarred =
     buttonTemplate [ View.Utility.elementAttribute "title" "Search by ★" ] (SearchBy "★") "★"
+
+
+starSnippet : Element FrontendMsg
+starSnippet =
+    buttonTemplate [ View.Utility.elementAttribute "title" "Star snippet" ] StarSnippet "★"
 
 
 save : Element FrontendMsg

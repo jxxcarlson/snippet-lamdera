@@ -100,6 +100,7 @@ type FrontendMsg
       -- DATA
     | InputSnippet String
     | SearchBy String
+    | StarSnippet
     | Save
     | EditItem Datum
     | Delete

@@ -183,6 +183,7 @@ notSignedInHeader model =
 signedInHeader model user =
     E.row [ E.spacing 12 ]
         [ Button.signOut user.username
+        , Button.starSnippet
         , Button.save
         , Button.delete
         ]

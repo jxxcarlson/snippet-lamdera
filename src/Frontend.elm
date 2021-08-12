@@ -166,7 +166,26 @@ update msg model =
             ( { model | inputSnippetFilter = str }, Cmd.none )
 
         SearchBy str ->
-            ( { model | inputSnippetFilter = str }, Cmd.none )
+            let
+                inputSnippetFilter =
+                    if str == "★" then
+                        "★" ++ model.inputSnippetFilter
+
+                    else
+                        str
+            in
+            ( { model | inputSnippetFilter = inputSnippetFilter }, Cmd.none )
+
+        StarSnippet ->
+            let
+                newSnippetText =
+                    if String.slice 0 1 model.snippetText == "★" then
+                        "★" ++ model.snippetText
+
+                    else
+                        "★ " ++ model.snippetText
+            in
+            ( { model | snippetText = newSnippetText }, Cmd.none )
 
         ModificationOrder ->
             ( { model | snippets = List.sortBy (\snip -> -(Time.posixToMillis snip.modificationData)) model.snippets }, Cmd.none )
