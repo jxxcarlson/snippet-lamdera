@@ -51,7 +51,7 @@ mainColumn model =
                 [ E.column [ E.spacing 12 ]
                     [ View.Input.snippetText model (appWidth_ model) model.snippetText
                     , E.row [ E.spacing 8, E.width (E.px (appWidth_ model)) ]
-                        [ View.Input.snippetFilter model (appWidth_ model - 190)
+                        [ View.Input.snippetFilter model (appWidth_ model - 210)
                         , Button.searchByStarred
                         , Button.sortByModificationDate
                         , Button.randomize
@@ -258,7 +258,7 @@ panelHeight_ model =
 
 
 appWidth_ model =
-    min 500 model.windowWidth
+    min 550 model.windowWidth
 
 
 mainColumnStyle model =
