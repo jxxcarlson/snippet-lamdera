@@ -72,7 +72,7 @@ filter1 : String -> List Datum -> List Datum
 filter1 filterString data =
     let
         filterString_ =
-            String.toLower filterString
+            String.toLower filterString |> String.replace ":star" (String.fromChar '★')
     in
     List.filter (\datum -> String.contains filterString_ (String.toLower datum.content)) data
 
