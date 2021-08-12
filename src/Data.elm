@@ -59,8 +59,8 @@ type alias DataDict =
     Dict Username DataFile
 
 
-transformer { title, creationData } =
-    { targetContent = title, targetDate = creationData }
+transformer { title, content, creationData } =
+    { targetContent = title ++ content, targetDate = creationData }
 
 
 filter : String -> List Datum -> List Datum
