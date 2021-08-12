@@ -60,7 +60,7 @@ type alias DataDict =
 
 
 transformer { title, content, creationData } =
-    { targetContent = title ++ content, targetDate = creationData }
+    { targetContent = title ++ String.replace "!!" "wow!" content, targetDate = creationData }
 
 
 filter : String -> List Datum -> List Datum
