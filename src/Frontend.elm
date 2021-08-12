@@ -249,6 +249,9 @@ update msg model =
                                     , sendToBackend (UpdateDatum user.username newSnippet)
                                     )
 
+        Cancel ->
+            ( { model | appMode = EntryMode, snippetText = "" }, Cmd.none )
+
         Delete ->
             case model.currentSnippet of
                 Nothing ->

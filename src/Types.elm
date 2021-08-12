@@ -102,6 +102,7 @@ type FrontendMsg
     | SearchBy String
     | StarSnippet
     | Save
+    | Cancel
     | EditItem Datum
     | Delete
     | InputSnippetFilter String

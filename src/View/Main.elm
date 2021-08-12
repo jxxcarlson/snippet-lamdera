@@ -185,6 +185,7 @@ signedInHeader model user =
         [ Button.signOut user.username
         , Button.starSnippet
         , Button.save
+        , Button.cancel
         , Button.delete
         ]
 

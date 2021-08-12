@@ -1,5 +1,6 @@
 module View.Button exposing
     ( adminPopup
+    , cancel
     , delete
     , editItem
     , expandCollapse
@@ -100,6 +101,11 @@ starSnippet =
 save : Element FrontendMsg
 save =
     buttonTemplate [] Save "Save"
+
+
+cancel : Element FrontendMsg
+cancel =
+    buttonTemplate [] Cancel "Cancel"
 
 
 delete : Element FrontendMsg
