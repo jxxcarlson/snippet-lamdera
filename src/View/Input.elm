@@ -62,7 +62,7 @@ snippetText model width_ height_ text_ =
                     [ Background.color Color.paleViolet ]
 
                 EditMode ->
-                    [ Background.color Color.palePink ]
+                    [ Background.color Color.paleGray ]
     in
     multiLineTemplate attrs (E.px width_) (E.px height_) "Snippet" InputSnippet text_
 

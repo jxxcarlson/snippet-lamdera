@@ -8,6 +8,7 @@ module View.Color exposing
     , lightGray
     , medGray
     , paleBlue
+    , paleGray
     , palePink
     , paleViolet
     , red
@@ -32,6 +33,11 @@ white =
 lightGray : E.Color
 lightGray =
     gray 0.9
+
+
+paleGray : E.Color
+paleGray =
+    gray 0.94
 
 
 medGray : E.Color

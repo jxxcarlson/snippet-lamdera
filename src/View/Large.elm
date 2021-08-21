@@ -84,7 +84,7 @@ rhs model =
 viewSnippets : Model -> List Datum -> Element FrontendMsg
 viewSnippets model filteredSnippets =
     E.column
-        [ E.spacing 12
+        [ E.spacing 8
         , E.paddingXY 0 0
         , E.scrollbarY
         , E.width (panelWidth 0 model)
@@ -104,19 +104,19 @@ viewSnippet model datum =
         , Background.color Color.veryPaleBlue
         ]
         [ View.Utility.cssNode "markdown.css"
-        , E.column [ E.alignTop, E.spacing 8 ] [ E.el [] (Button.editItem model.appMode datum) ]
-        , E.column
-            [ E.width (appWidth_ 0 model)
-            , E.height (E.px 30)
-            , E.alignTop
-            , E.moveUp 16
-
-            -- , Background.color Color.white
-            , View.Utility.elementAttribute "line-height" "1.5"
-            ]
-            [ Markdown.Render.toHtml Markdown.Option.ExtendedMath datum.content
-                |> Html.map MarkdownMsg
-                |> E.html
+        , E.row [ E.spacing 12, E.height (E.px 24) ]
+            [ E.el [ E.moveUp 6 ] (Button.editItem model.appMode datum)
+            , E.column
+                [ E.width (appWidth_ 0 model)
+                , E.clipY
+                , E.height (E.px 36)
+                , E.moveUp 10
+                , View.Utility.elementAttribute "line-height" "1.5"
+                ]
+                [ Markdown.Render.toHtml Markdown.Option.ExtendedMath datum.content
+                    |> Html.map MarkdownMsg
+                    |> E.html
+                ]
             ]
         ]
 
@@ -256,7 +256,7 @@ panelHeight_ model =
 
 appWidth_ : Int -> { a | windowWidth : Int } -> E.Length
 appWidth_ delta model =
-    E.px (min 1000 model.windowWidth + delta)
+    E.px (min 1110 model.windowWidth + delta)
 
 
 panelWidth : Int -> { a | windowWidth : Int } -> E.Length
@@ -266,7 +266,7 @@ panelWidth delta model =
 
 panelWidth_ : Int -> { a | windowWidth : Int } -> Int
 panelWidth_ delta model =
-    round (min 493 (0.48 * toFloat model.windowWidth)) + delta
+    round (min 549 (0.48 * toFloat model.windowWidth)) + delta
 
 
 mainColumnStyle model =
