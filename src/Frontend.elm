@@ -66,12 +66,13 @@ init url key =
       , snippets = []
       , currentSnippet = Nothing
       , inputSnippetFilter = ""
-      , viewMode = Collapsed
+      , snippetViewMode = SnippetCollapsed
 
       -- USER
       , currentUser = Nothing
       , inputUsername = ""
       , inputPassword = ""
+      , viewMode = SmallView
       }
     , Cmd.batch [ Frontend.Cmd.setupWindow, Frontend.Cmd.getRandomNumberFE ]
     )
@@ -289,15 +290,15 @@ update msg model =
             let
                 toggleViewMode mode =
                     case mode of
-                        Expanded ->
-                            Collapsed
+                        SnippetExpanded ->
+                            SnippetCollapsed
 
-                        Collapsed ->
-                            Expanded
+                        SnippetCollapsed ->
+                            SnippetExpanded
             in
             ( { model
                 | currentSnippet = Just datum
-                , viewMode = toggleViewMode model.viewMode
+                , snippetViewMode = toggleViewMode model.snippetViewMode
               }
             , Cmd.none
             )
@@ -307,6 +308,19 @@ update msg model =
 
         ExportYaml ->
             ( model, Frontend.Update.exportSnippets model )
+
+        -- UI
+        ExpandContractView ->
+            let
+                newViewMode =
+                    case model.viewMode of
+                        SmallView ->
+                            LargeView
+
+                        LargeView ->
+                            SmallView
+            in
+            ( { model | viewMode = newViewMode }, Cmd.none )
 
         -- ADMIN
         AdminRunTask ->

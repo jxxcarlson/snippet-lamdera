@@ -4,6 +4,7 @@ module View.Button exposing
     , delete
     , editItem
     , expandCollapse
+    , expandCollapseView
     , exportYaml
     , fetch
     , getUsers
@@ -146,6 +147,31 @@ expandCollapse datum =
         ]
         (ExpandContractItem datum)
         ""
+
+
+expandCollapseView viewMode =
+    case viewMode of
+        SmallView ->
+            buttonTemplate
+                [ E.width (E.px 10)
+                , E.height (E.px 20)
+                , Background.color Color.lightBlue2
+                , Font.color Color.palePink
+                , View.Utility.elementAttribute "title" "Click for expanded view"
+                ]
+                ExpandContractView
+                ""
+
+        LargeView ->
+            buttonTemplate
+                [ E.width (E.px 40)
+                , E.height (E.px 20)
+                , Background.color Color.lightBlue2
+                , Font.color Color.palePink
+                , View.Utility.elementAttribute "title" "Click for small view"
+                ]
+                ExpandContractView
+                ""
 
 
 

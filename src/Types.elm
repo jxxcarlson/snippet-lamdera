@@ -38,18 +38,24 @@ type alias FrontendModel =
     , snippets : List Datum
     , currentSnippet : Maybe Datum
     , inputSnippetFilter : String
-    , viewMode : ViewMode
+    , snippetViewMode : SnippetViewMode
 
     -- UI
     , windowWidth : Int
     , windowHeight : Int
     , popupStatus : PopupStatus
+    , viewMode : ViewMode
     }
 
 
 type ViewMode
-    = Expanded
-    | Collapsed
+    = SmallView
+    | LargeView
+
+
+type SnippetViewMode
+    = SnippetExpanded
+    | SnippetCollapsed
 
 
 type AppMode
@@ -113,6 +119,8 @@ type FrontendMsg
     | RandomizedOrder (List Datum)
     | MarkdownMsg Markdown.Render.MarkdownMsg
     | ExportYaml
+      -- UI
+    | ExpandContractView
       -- ADMIN
     | AdminRunTask
     | GetUsers

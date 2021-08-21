@@ -45,7 +45,7 @@ mainColumn model =
     in
     E.column (mainColumnStyle model)
         [ E.column [ E.spacing 12, E.width (E.px <| appWidth_ model), E.height (E.px (appHeight_ model)) ]
-            [ title "Snippet Manager"
+            [ E.row [ E.width (E.px <| appWidth_ model) ] [ title "Snippet Manager", E.el [ E.alignRight ] (Button.expandCollapseView model.viewMode) ]
             , header model
             , E.column [ E.spacing 12 ]
                 [ E.column [ E.spacing 12 ]
@@ -86,7 +86,7 @@ viewSnippet : Model -> Datum -> Element FrontendMsg
 viewSnippet model datum =
     let
         predicate =
-            Just datum.id == Maybe.map .id model.currentSnippet && model.viewMode == Expanded
+            Just datum.id == Maybe.map .id model.currentSnippet && model.snippetViewMode == SnippetExpanded
 
         h =
             if predicate then
