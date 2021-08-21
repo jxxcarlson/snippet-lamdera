@@ -112,7 +112,7 @@ fetch =
 
 cancel : Element FrontendMsg
 cancel =
-    buttonTemplate [] Cancel "Cancel"
+    buttonTemplate [] Cancel "Close"
 
 
 delete : Element FrontendMsg
