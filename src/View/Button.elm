@@ -135,7 +135,7 @@ editItem appMode datum =
     buttonTemplate
         [ E.width (E.px 20)
         , E.height (E.px 20)
-        , Background.color Color.medBlue
+        , Background.color Color.blueGray
         , Font.color Color.palePink
         , View.Utility.elementAttribute "title" "Click to edit or display this item"
         ]

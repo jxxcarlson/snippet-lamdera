@@ -117,8 +117,6 @@ viewSnippet model datum =
             , scroll
             , E.alignTop
             , E.moveUp 16
-
-            -- , Background.color Color.white
             , View.Utility.elementAttribute "line-height" "1.5"
             ]
             [ Markdown.Render.toHtml Markdown.Option.ExtendedMath datum.content

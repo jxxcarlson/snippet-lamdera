@@ -57,7 +57,7 @@ lhs model =
     E.column [ E.spacing 12, E.width (panelWidth 0 model) ]
         [ E.column [ E.spacing 12 ]
             [ E.row [ E.spacing 8, E.width (panelWidth 0 model) ]
-                [ View.Input.snippetFilter model (panelWidth_ -210 model)
+                [ View.Input.snippetFilter model (panelWidth_ -230 model)
                 , Button.searchByStarred
                 , Button.sortByModificationDate
                 , Button.randomize
@@ -85,7 +85,7 @@ viewSnippets model filteredSnippets =
         , E.scrollbarY
         , E.width (panelWidth 0 model)
         , E.height (E.px (appHeight model - 155))
-        , Background.color Color.lightBlue
+        , Background.color Color.blueGray
         ]
         (List.map (viewSnippet model) filteredSnippets)
 
@@ -97,8 +97,6 @@ viewSnippet model datum =
         , Border.widthEach { bottom = 2, top = 0, left = 0, right = 0 }
         , Border.color Color.darkBlue
         , E.height (E.px 36)
-
-        --, E.paddingEach { top = 10, left = 10, right = 10, bottom = 0 }
         , E.width (appWidth_ 0 model)
         , Background.color Color.veryPaleBlue
         ]
@@ -182,16 +180,10 @@ signedInHeader model user =
 rhsHeader model =
     E.row [ E.spacing 12 ]
         [ Button.starSnippet
-        , Button.new
         , Button.save
         , Button.cancel
         , Button.delete
         ]
-
-
-defaultRHSHeader model =
-    E.row [ E.spacing 12, E.height (E.px 30) ]
-        [ Button.new ]
 
 
 docsInfo model n =
@@ -208,20 +200,6 @@ docsInfo model n =
         , Font.color Color.lightBlue
         ]
         (E.text <| "filtered/fetched = " ++ String.fromInt n ++ "/" ++ String.fromInt total)
-
-
-docList_ : Model -> List (Element FrontendMsg) -> Element FrontendMsg
-docList_ model filteredDocs =
-    E.column
-        [ View.Style.bgGray 0.85
-        , E.height (E.px (panelHeight_ model - searchDocPaneHeight))
-        , E.spacing 4
-        , E.width (E.px docListWidth)
-        , E.paddingXY 8 12
-        , Background.color Color.paleViolet
-        , E.scrollbarY
-        ]
-        filteredDocs
 
 
 viewDummy : Model -> Element FrontendMsg
