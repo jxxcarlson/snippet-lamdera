@@ -96,24 +96,6 @@ viewSnippets model filteredSnippets =
 
 viewSnippet : Model -> Datum -> Element FrontendMsg
 viewSnippet model datum =
-    let
-        predicate =
-            Just datum.id == Maybe.map .id model.currentSnippet && model.snippetViewMode == SnippetExpanded
-
-        h =
-            if predicate then
-                300
-
-            else
-                60
-
-        scroll =
-            if predicate then
-                E.scrollbarY
-
-            else
-                E.clipY
-    in
     E.row
         [ Font.size 14
         , E.spacing 12
@@ -125,8 +107,7 @@ viewSnippet model datum =
         , E.column [ E.alignTop, E.spacing 8 ] [ E.el [] (Button.editItem model.appMode datum) ]
         , E.column
             [ E.width (appWidth_ 0 model)
-            , E.height (E.px h)
-            , scroll
+            , E.height (E.px 30)
             , E.alignTop
             , E.moveUp 16
 
