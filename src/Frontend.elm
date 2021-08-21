@@ -52,7 +52,7 @@ init url key =
       , message = "Welcome!"
       , currentTime = Time.millisToPosix 0
       , randomSeed = Random.initialSeed 1234
-      , appMode = EntryMode
+      , appMode = RestMode
 
       -- ADMIN
       , users = []
@@ -217,7 +217,7 @@ update msg model =
 
                 Just user ->
                     case model.appMode of
-                        EntryMode ->
+                        RestMode ->
                             let
                                 { token, seed } =
                                     Token.get model.randomSeed
@@ -252,15 +252,15 @@ update msg model =
                                     in
                                     ( { model
                                         | snippets = newSnippets
-                                        , appMode = EntryMode
+                                        , appMode = RestMode
                                         , currentSnippet = Nothing
                                         , snippetText = ""
                                       }
                                     , sendToBackend (UpdateDatum user.username newSnippet)
                                     )
 
-        Cancel ->
-            ( { model | appMode = EntryMode, snippetText = "" }, Cmd.none )
+        Close ->
+            ( { model | appMode = RestMode, snippetText = "" }, Cmd.none )
 
         Delete ->
             case model.currentSnippet of
@@ -271,32 +271,21 @@ update msg model =
                     ( { model
                         | currentSnippet = Nothing
                         , snippetText = ""
-                        , appMode = EntryMode
+                        , appMode = RestMode
                         , snippets = List.filter (\snip -> snip.id /= snippet.id) model.snippets
                       }
                     , sendToBackend (DeleteSnippetFromStore snippet.username snippet.id)
                     )
 
         EditItem appMode datum ->
-            case appMode of
-                EntryMode ->
-                    ( { model
-                        | message = "Editing " ++ datum.id
-                        , currentSnippet = Just datum
-                        , snippetText = datum.content
-                        , appMode = EditMode
-                      }
-                    , Cmd.none
-                    )
-
-                EditMode ->
-                    ( { model
-                        | message = "Not editing "
-                        , snippetText = ""
-                        , appMode = EntryMode
-                      }
-                    , Cmd.none
-                    )
+            ( { model
+                | message = "Editing " ++ datum.id
+                , currentSnippet = Just datum
+                , snippetText = datum.content
+                , appMode = EditMode
+              }
+            , Cmd.none
+            )
 
         ExpandContractItem datum ->
             let

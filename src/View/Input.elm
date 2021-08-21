@@ -25,7 +25,7 @@ inputFieldTemplate width_ height_ default msg text =
 
 multiLineTemplate : List (E.Attribute msg) -> E.Length -> E.Length -> String -> (String -> msg) -> String -> Element msg
 multiLineTemplate attrList width_ height_ default msg text =
-    Input.multiline ([ E.moveUp 5, Font.size 16, E.height height_, E.width width_ ] ++ attrList)
+    Input.multiline ([ E.moveUp 5, Font.size 16, E.height height_, E.width width_, E.scrollbarY ] ++ attrList)
         { onChange = msg
         , text = text
         , label = Input.labelHidden default
@@ -58,7 +58,7 @@ snippetText model width_ height_ text_ =
     let
         attrs =
             case model.appMode of
-                EntryMode ->
+                RestMode ->
                     [ Background.color Color.paleViolet ]
 
                 EditMode ->

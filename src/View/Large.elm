@@ -71,7 +71,8 @@ lhs model =
 rhs model =
     E.column [ E.spacing 12, E.width (panelWidth 0 model) ]
         [ E.column [ E.spacing 12 ]
-            [ rhsHeader model
+            [ View.Utility.showIf (model.appMode == EditMode) (rhsHeader model)
+            , View.Utility.showIf (model.appMode /= EditMode) (dummyRhsHeader model)
             , View.Input.snippetText model (panelWidth_ 0 model) (appHeight model - 154) model.snippetText
             ]
         ]
@@ -187,6 +188,11 @@ rhsHeader model =
         , Button.cancel
         , Button.delete
         ]
+
+
+dummyRhsHeader model =
+    E.row [ E.spacing 12, E.height (E.px 30) ]
+        []
 
 
 docsInfo model n =

@@ -112,7 +112,7 @@ fetch =
 
 cancel : Element FrontendMsg
 cancel =
-    buttonTemplate [] Cancel "Close"
+    buttonTemplate [] Close "Close"
 
 
 delete : Element FrontendMsg
@@ -131,7 +131,7 @@ editItem appMode datum =
         , E.height (E.px 20)
         , Background.color Color.lightBlue
         , Font.color Color.palePink
-        , View.Utility.elementAttribute "title" "Click to edit this item"
+        , View.Utility.elementAttribute "title" "Click to edit or display this item"
         ]
         (EditItem appMode datum)
         ""

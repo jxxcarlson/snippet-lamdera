@@ -59,7 +59,7 @@ type SnippetViewMode
 
 
 type AppMode
-    = EntryMode
+    = RestMode
     | EditMode
 
 
@@ -109,7 +109,7 @@ type FrontendMsg
     | StarSnippet
     | Save
     | Fetch
-    | Cancel
+    | Close
     | EditItem AppMode Datum
     | Delete
     | InputSnippetFilter String
