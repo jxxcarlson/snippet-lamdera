@@ -187,6 +187,7 @@ signedInHeader model user =
         , Button.save
         , Button.cancel
         , Button.delete
+        , Button.fetch
         ]
 
 

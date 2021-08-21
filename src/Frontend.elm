@@ -200,6 +200,14 @@ update msg model =
         RandomizedOrder snippets_ ->
             ( { model | snippets = snippets_ }, Cmd.none )
 
+        Fetch ->
+            case model.currentUser of
+                Nothing ->
+                    ( model, Cmd.none )
+
+                Just user ->
+                    ( model, sendToBackend (SendUserData user.username) )
+
         Save ->
             case model.currentUser of
                 Nothing ->

@@ -5,6 +5,7 @@ module View.Button exposing
     , editItem
     , expandCollapse
     , exportYaml
+    , fetch
     , getUsers
     , linkTemplate
     , randomize
@@ -101,6 +102,11 @@ starSnippet =
 save : Element FrontendMsg
 save =
     buttonTemplate [] Save "Save"
+
+
+fetch : Element FrontendMsg
+fetch =
+    buttonTemplate [] Fetch "Fetch"
 
 
 cancel : Element FrontendMsg
