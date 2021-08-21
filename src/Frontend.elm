@@ -277,12 +277,20 @@ update msg model =
                     , sendToBackend (DeleteSnippetFromStore snippet.username snippet.id)
                     )
 
-        EditItem appMode datum ->
+        EditItem datum ->
             ( { model
                 | message = "Editing " ++ datum.id
                 , currentSnippet = Just datum
                 , snippetText = datum.content
                 , appMode = EditMode
+              }
+            , Cmd.none
+            )
+
+        New ->
+            ( { model
+                | appMode = RestMode
+                , snippetText = ""
               }
             , Cmd.none
             )

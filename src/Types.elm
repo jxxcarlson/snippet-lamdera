@@ -107,10 +107,11 @@ type FrontendMsg
     | InputSnippet String
     | SearchBy String
     | StarSnippet
+    | New
     | Save
     | Fetch
     | Close
-    | EditItem AppMode Datum
+    | EditItem Datum
     | Delete
     | InputSnippetFilter String
     | ExpandContractItem Datum

@@ -3,11 +3,11 @@ module View.Large exposing (..)
 import Data exposing (Datum)
 import Element as E exposing (Element)
 import Element.Background as Background
+import Element.Border as Border
 import Element.Font as Font
 import Html exposing (Html)
 import Markdown.Option
 import Markdown.Render
-import Time
 import Types exposing (..)
 import View.Button as Button
 import View.Color as Color
@@ -72,25 +72,20 @@ rhs model =
     E.column [ E.spacing 12, E.width (panelWidth 0 model) ]
         [ E.column [ E.spacing 12 ]
             [ View.Utility.showIf (model.appMode == EditMode) (rhsHeader model)
-            , View.Utility.showIf (model.appMode /= EditMode) (dummyRhsHeader model)
+            , View.Utility.showIf (model.appMode /= EditMode) (rhsHeader model)
             , View.Input.snippetText model (panelWidth_ 0 model) (appHeight model - 154) model.snippetText
             ]
         ]
 
 
-
--- (List.map (viewSnippet model)
-
-
 viewSnippets : Model -> List Datum -> Element FrontendMsg
 viewSnippets model filteredSnippets =
     E.column
-        [ E.spacing 8
-        , E.paddingXY 0 0
+        [ E.paddingXY 0 0
         , E.scrollbarY
         , E.width (panelWidth 0 model)
         , E.height (E.px (appHeight model - 155))
-        , Background.color Color.darkBlue
+        , Background.color Color.lightBlue
         ]
         (List.map (viewSnippet model) filteredSnippets)
 
@@ -99,19 +94,22 @@ viewSnippet : Model -> Datum -> Element FrontendMsg
 viewSnippet model datum =
     E.row
         [ Font.size 14
-        , E.spacing 12
-        , E.paddingEach { top = 10, left = 10, right = 10, bottom = 0 }
+        , Border.widthEach { bottom = 2, top = 0, left = 0, right = 0 }
+        , Border.color Color.darkBlue
+        , E.height (E.px 36)
+
+        --, E.paddingEach { top = 10, left = 10, right = 10, bottom = 0 }
         , E.width (appWidth_ 0 model)
         , Background.color Color.veryPaleBlue
         ]
         [ View.Utility.cssNode "markdown.css"
-        , E.row [ E.spacing 12, E.height (E.px 24) ]
-            [ E.el [ E.moveUp 6 ] (Button.editItem model.appMode datum)
+        , E.row [ E.spacing 12, E.paddingEach { left = 6, right = 0, top = 0, bottom = 0 } ]
+            [ E.el [] (Button.editItem model.appMode datum)
             , E.column
                 [ E.width (appWidth_ 0 model)
                 , E.clipY
                 , E.height (E.px 36)
-                , E.moveUp 10
+                , E.moveUp 3
                 , View.Utility.elementAttribute "line-height" "1.5"
                 ]
                 [ Markdown.Render.toHtml Markdown.Option.ExtendedMath datum.content
@@ -184,15 +182,16 @@ signedInHeader model user =
 rhsHeader model =
     E.row [ E.spacing 12 ]
         [ Button.starSnippet
+        , Button.new
         , Button.save
         , Button.cancel
         , Button.delete
         ]
 
 
-dummyRhsHeader model =
+defaultRHSHeader model =
     E.row [ E.spacing 12, E.height (E.px 30) ]
-        []
+        [ Button.new ]
 
 
 docsInfo model n =

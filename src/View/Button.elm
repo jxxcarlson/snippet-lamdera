@@ -9,6 +9,7 @@ module View.Button exposing
     , fetch
     , getUsers
     , linkTemplate
+    , new
     , randomize
     , runTask
     , save
@@ -115,6 +116,11 @@ cancel =
     buttonTemplate [] Close "Close"
 
 
+new : Element FrontendMsg
+new =
+    buttonTemplate [] New "New"
+
+
 delete : Element FrontendMsg
 delete =
     buttonTemplate [] Delete "Delete"
@@ -129,11 +135,11 @@ editItem appMode datum =
     buttonTemplate
         [ E.width (E.px 20)
         , E.height (E.px 20)
-        , Background.color Color.lightBlue
+        , Background.color Color.medBlue
         , Font.color Color.palePink
         , View.Utility.elementAttribute "title" "Click to edit or display this item"
         ]
-        (EditItem appMode datum)
+        (EditItem datum)
         ""
 
 

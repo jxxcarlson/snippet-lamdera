@@ -6,6 +6,7 @@ module View.Color exposing
     , lightBlue
     , lightBlue2
     , lightGray
+    , medBlue
     , medGray
     , paleBlue
     , paleGray
@@ -71,17 +72,22 @@ blue =
 
 darkBlue : E.Color
 darkBlue =
-    E.rgb255 180 180 220
+    E.rgb255 0 0 200
+
+
+medBlue : E.Color
+medBlue =
+    E.rgb255 93 98 252
 
 
 lightBlue : E.Color
 lightBlue =
-    E.rgb255 120 120 200
+    E.rgb255 182 184 250
 
 
 paleBlue : E.Color
 paleBlue =
-    E.rgb255 180 180 255
+    E.rgb255 217 218 252
 
 
 veryPaleBlue : E.Color
