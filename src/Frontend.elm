@@ -18,7 +18,8 @@ import Token
 import Types exposing (..)
 import Url exposing (Url)
 import Util
-import View.Main
+import View.Large
+import View.Small
 
 
 type alias Model =
@@ -276,15 +277,26 @@ update msg model =
                     , sendToBackend (DeleteSnippetFromStore snippet.username snippet.id)
                     )
 
-        EditItem datum ->
-            ( { model
-                | message = "Editing " ++ datum.id
-                , currentSnippet = Just datum
-                , snippetText = datum.content
-                , appMode = EditMode
-              }
-            , Cmd.none
-            )
+        EditItem appMode datum ->
+            case appMode of
+                EntryMode ->
+                    ( { model
+                        | message = "Editing " ++ datum.id
+                        , currentSnippet = Just datum
+                        , snippetText = datum.content
+                        , appMode = EditMode
+                      }
+                    , Cmd.none
+                    )
+
+                EditMode ->
+                    ( { model
+                        | message = "Not editing "
+                        , snippetText = ""
+                        , appMode = EntryMode
+                      }
+                    , Cmd.none
+                    )
 
         ExpandContractItem datum ->
             let
@@ -356,5 +368,10 @@ view : Model -> { title : String, body : List (Html.Html FrontendMsg) }
 view model =
     { title = ""
     , body =
-        [ View.Main.view model ]
+        case model.viewMode of
+            SmallView ->
+                [ View.Small.view model ]
+
+            LargeView ->
+                [ View.Large.view model ]
     }

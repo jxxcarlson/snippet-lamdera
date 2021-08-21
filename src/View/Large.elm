@@ -1,4 +1,4 @@
-module View.Main exposing (view)
+module View.Large exposing (..)
 
 import Data exposing (Datum)
 import Element as E exposing (Element)
@@ -30,6 +30,17 @@ view model =
 
 mainColumn : Model -> Element FrontendMsg
 mainColumn model =
+    E.column (mainColumnStyle model)
+        [ E.column [ E.spacing 12, E.width (appWidth_ 0 model), E.height (E.px (appHeight model)) ]
+            [ E.row [ E.width (appWidth_ 0 model) ] [ title "Snippet Manager", E.el [ E.alignRight ] (Button.expandCollapseView model.viewMode) ]
+            , header model
+            , E.row [ E.spacing 12 ] [ lhs model, rhs model ]
+            , footer model
+            ]
+        ]
+
+
+lhs model =
     let
         filteredSnippets =
             Data.filter (String.trim model.inputSnippetFilter) model.snippets
@@ -43,24 +54,25 @@ mainColumn model =
         ratio =
             numberOfFilteredSnippets ++ "/" ++ numberOfSnippets
     in
-    E.column (mainColumnStyle model)
-        [ E.column [ E.spacing 12, E.width (E.px <| appWidth_ model), E.height (E.px (appHeight_ model)) ]
-            [ E.row [ E.width (E.px <| appWidth_ model) ] [ title "Snippet Manager", E.el [ E.alignRight ] (Button.expandCollapseView model.viewMode) ]
-            , header model
-            , E.column [ E.spacing 12 ]
-                [ E.column [ E.spacing 12 ]
-                    [ View.Input.snippetText model (appWidth_ model) model.snippetText
-                    , E.row [ E.spacing 8, E.width (E.px (appWidth_ model)) ]
-                        [ View.Input.snippetFilter model (appWidth_ model - 210)
-                        , Button.searchByStarred
-                        , Button.sortByModificationDate
-                        , Button.randomize
-                        , E.el [ Font.color Color.white, Font.size 14, E.alignRight ] (E.text ratio)
-                        ]
-                    , viewSnippets model filteredSnippets
-                    ]
+    E.column [ E.spacing 12, E.width (panelWidth 0 model) ]
+        [ E.column [ E.spacing 12 ]
+            [ E.row [ E.spacing 8, E.width (panelWidth 0 model) ]
+                [ View.Input.snippetFilter model (panelWidth_ -210 model)
+                , Button.searchByStarred
+                , Button.sortByModificationDate
+                , Button.randomize
+                , E.el [ Font.color Color.white, Font.size 14, E.alignRight ] (E.text ratio)
                 ]
-            , footer model
+            , viewSnippets model filteredSnippets
+            ]
+        ]
+
+
+rhs model =
+    E.column [ E.spacing 12, E.width (panelWidth 0 model) ]
+        [ E.column [ E.spacing 12 ]
+            [ rhsHeader model
+            , View.Input.snippetText model (panelWidth_ 0 model) (appHeight model - 154) model.snippetText
             ]
         ]
 
@@ -75,8 +87,8 @@ viewSnippets model filteredSnippets =
         [ E.spacing 12
         , E.paddingXY 0 0
         , E.scrollbarY
-        , E.width (E.px <| appWidth_ model)
-        , E.height (E.px (appHeight_ model - 270))
+        , E.width (panelWidth 0 model)
+        , E.height (E.px (appHeight model - 155))
         , Background.color Color.darkBlue
         ]
         (List.map (viewSnippet model) filteredSnippets)
@@ -106,13 +118,13 @@ viewSnippet model datum =
         [ Font.size 14
         , E.spacing 12
         , E.paddingEach { top = 10, left = 10, right = 10, bottom = 0 }
-        , E.width (E.px <| appWidth_ model)
+        , E.width (appWidth_ 0 model)
         , Background.color Color.veryPaleBlue
         ]
         [ View.Utility.cssNode "markdown.css"
-        , E.column [ E.alignTop, E.spacing 8 ] [ E.el [] (Button.editItem datum), Button.expandCollapse datum ]
+        , E.column [ E.alignTop, E.spacing 8 ] [ E.el [] (Button.editItem model.appMode datum) ]
         , E.column
-            [ E.width (E.px <| appWidth_ model)
+            [ E.width (appWidth_ 0 model)
             , E.height (E.px h)
             , scroll
             , E.alignTop
@@ -133,7 +145,7 @@ footer model =
         [ E.spacing 12
         , E.paddingXY 0 8
         , E.height (E.px 25)
-        , E.width (E.px <| appWidth_ model)
+        , E.width (appWidth_ 0 model)
         , Font.size 14
         , E.inFront (View.Popup.admin model)
         ]
@@ -155,7 +167,7 @@ messageRow model =
 
 
 footerButtons model =
-    E.row [ E.width (E.px (panelWidth_ model)), E.spacing 12 ] []
+    E.row [ E.width (panelWidth 0 model), E.spacing 12 ] []
 
 
 header model =
@@ -183,11 +195,16 @@ notSignedInHeader model =
 signedInHeader model user =
     E.row [ E.spacing 12 ]
         [ Button.signOut user.username
-        , Button.starSnippet
+        , Button.fetch
+        ]
+
+
+rhsHeader model =
+    E.row [ E.spacing 12 ]
+        [ Button.starSnippet
         , Button.save
         , Button.cancel
         , Button.delete
-        , Button.fetch
         ]
 
 
@@ -226,7 +243,7 @@ viewDummy model =
     E.column
         [ E.paddingEach { left = 24, right = 24, top = 12, bottom = 96 }
         , Background.color Color.veryPaleBlue
-        , E.width (E.px (panelWidth_ model))
+        , E.width (panelWidth 0 model)
         , E.height (E.px (panelHeight_ model))
         , E.centerX
         , Font.size 14
@@ -243,24 +260,32 @@ searchDocPaneHeight =
     70
 
 
-panelWidth_ model =
-    min 600 ((model.windowWidth - 100 - docListWidth) // 2)
-
-
 docListWidth =
     220
 
 
-appHeight_ model =
+appHeight : { a | windowHeight : number } -> number
+appHeight model =
     model.windowHeight - 100
 
 
 panelHeight_ model =
-    appHeight_ model - 110
+    appHeight model - 110
 
 
-appWidth_ model =
-    min 550 model.windowWidth
+appWidth_ : Int -> { a | windowWidth : Int } -> E.Length
+appWidth_ delta model =
+    E.px (min 1000 model.windowWidth + delta)
+
+
+panelWidth : Int -> { a | windowWidth : Int } -> E.Length
+panelWidth delta model =
+    E.px (panelWidth_ delta model)
+
+
+panelWidth_ : Int -> { a | windowWidth : Int } -> Int
+panelWidth_ delta model =
+    round (min 493 (0.48 * toFloat model.windowWidth)) + delta
 
 
 mainColumnStyle model =
@@ -268,8 +293,8 @@ mainColumnStyle model =
     , E.centerY
     , View.Style.bgGray 0.5
     , E.paddingXY 20 20
-    , E.width (E.px (appWidth_ model + 40))
-    , E.height (E.px (appHeight_ model + 40))
+    , E.width (appWidth_ 40 model)
+    , E.height (E.px (appHeight model + 40))
     ]
 
 

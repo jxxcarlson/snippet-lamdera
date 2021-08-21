@@ -125,7 +125,7 @@ exportYaml =
     buttonTemplate [] ExportYaml "Export"
 
 
-editItem datum =
+editItem appMode datum =
     buttonTemplate
         [ E.width (E.px 20)
         , E.height (E.px 20)
@@ -133,7 +133,7 @@ editItem datum =
         , Font.color Color.palePink
         , View.Utility.elementAttribute "title" "Click to edit this item"
         ]
-        (EditItem datum)
+        (EditItem appMode datum)
         ""
 
 

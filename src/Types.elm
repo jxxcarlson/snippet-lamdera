@@ -110,7 +110,7 @@ type FrontendMsg
     | Save
     | Fetch
     | Cancel
-    | EditItem Datum
+    | EditItem AppMode Datum
     | Delete
     | InputSnippetFilter String
     | ExpandContractItem Datum

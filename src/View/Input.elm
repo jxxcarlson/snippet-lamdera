@@ -53,8 +53,8 @@ snippetFilter model width_ =
     inputFieldTemplate (E.px width_) (E.px 33) "Filter ..." InputSnippetFilter model.inputSnippetFilter
 
 
-snippetText : FrontendModel -> Int -> String -> Element FrontendMsg
-snippetText model width_ text_ =
+snippetText : FrontendModel -> Int -> Int -> String -> Element FrontendMsg
+snippetText model width_ height_ text_ =
     let
         attrs =
             case model.appMode of
@@ -64,7 +64,7 @@ snippetText model width_ text_ =
                 EditMode ->
                     [ Background.color Color.palePink ]
     in
-    multiLineTemplate attrs (E.px width_) (E.px 100) "Snippet" InputSnippet text_
+    multiLineTemplate attrs (E.px width_) (E.px height_) "Snippet" InputSnippet text_
 
 
 passwordInput model =
