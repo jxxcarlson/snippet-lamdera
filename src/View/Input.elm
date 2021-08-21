@@ -58,7 +58,7 @@ snippetText model width_ height_ text_ =
     let
         attrs =
             case model.appMode of
-                RestMode ->
+                ViewMode ->
                     [ Background.color Color.paleViolet ]
 
                 EditMode ->

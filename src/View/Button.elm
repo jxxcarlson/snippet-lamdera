@@ -18,6 +18,7 @@ module View.Button exposing
     , signOut
     , sortByModificationDate
     , starSnippet
+    , viewContent
     )
 
 import Config
@@ -137,7 +138,7 @@ editItem appMode datum =
         , E.height (E.px 20)
         , Background.color Color.blueGray
         , Font.color Color.palePink
-        , View.Utility.elementAttribute "title" "Click to edit or display this item"
+        , View.Utility.elementAttribute "title" "Edit"
         ]
         (EditItem datum)
         ""
@@ -149,9 +150,21 @@ expandCollapse datum =
         , E.height (E.px 20)
         , Background.color Color.lightBlue2
         , Font.color Color.palePink
-        , View.Utility.elementAttribute "title" "Click to expand/collapse item"
+        , View.Utility.elementAttribute "title" "Expand/collapse item"
         ]
         (ExpandContractItem datum)
+        ""
+
+
+viewContent datum =
+    buttonTemplate
+        [ E.width (E.px 20)
+        , E.height (E.px 20)
+        , Background.color Color.violet
+        , Font.color Color.palePink
+        , View.Utility.elementAttribute "title" "view content"
+        ]
+        (ViewContent datum)
         ""
 
 
@@ -161,9 +174,9 @@ expandCollapseView viewMode =
             buttonTemplate
                 [ E.width (E.px 10)
                 , E.height (E.px 20)
-                , Background.color Color.lightBlue2
+                , Background.color Color.violet
                 , Font.color Color.palePink
-                , View.Utility.elementAttribute "title" "Click for expanded view"
+                , View.Utility.elementAttribute "title" "Expanded view"
                 ]
                 ExpandContractView
                 ""
@@ -172,9 +185,9 @@ expandCollapseView viewMode =
             buttonTemplate
                 [ E.width (E.px 40)
                 , E.height (E.px 20)
-                , Background.color Color.lightBlue2
+                , Background.color Color.violet
                 , Font.color Color.palePink
-                , View.Utility.elementAttribute "title" "Click for small view"
+                , View.Utility.elementAttribute "title" "Small view"
                 ]
                 ExpandContractView
                 ""

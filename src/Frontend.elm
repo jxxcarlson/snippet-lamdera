@@ -52,7 +52,7 @@ init url key =
       , message = "Welcome!"
       , currentTime = Time.millisToPosix 0
       , randomSeed = Random.initialSeed 1234
-      , appMode = RestMode
+      , appMode = ViewMode
 
       -- ADMIN
       , users = []
@@ -217,7 +217,7 @@ update msg model =
 
                 Just user ->
                     case model.appMode of
-                        RestMode ->
+                        ViewMode ->
                             let
                                 { token, seed } =
                                     Token.get model.randomSeed
@@ -252,7 +252,7 @@ update msg model =
                                     in
                                     ( { model
                                         | snippets = newSnippets
-                                        , appMode = RestMode
+                                        , appMode = ViewMode
                                         , currentSnippet = Nothing
                                         , snippetText = ""
                                       }
@@ -260,7 +260,7 @@ update msg model =
                                     )
 
         Close ->
-            ( { model | appMode = RestMode, snippetText = "" }, Cmd.none )
+            ( { model | appMode = ViewMode, snippetText = "" }, Cmd.none )
 
         Delete ->
             case model.currentSnippet of
@@ -271,7 +271,7 @@ update msg model =
                     ( { model
                         | currentSnippet = Nothing
                         , snippetText = ""
-                        , appMode = RestMode
+                        , appMode = ViewMode
                         , snippets = List.filter (\snip -> snip.id /= snippet.id) model.snippets
                       }
                     , sendToBackend (DeleteSnippetFromStore snippet.username snippet.id)
@@ -289,11 +289,14 @@ update msg model =
 
         New ->
             ( { model
-                | appMode = RestMode
+                | appMode = ViewMode
                 , snippetText = ""
               }
             , Cmd.none
             )
+
+        ViewContent datum ->
+            ( { model | currentSnippet = Just datum, appMode = ViewMode }, Cmd.none )
 
         ExpandContractItem datum ->
             let

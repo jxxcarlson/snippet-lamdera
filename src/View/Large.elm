@@ -31,7 +31,7 @@ view model =
 mainColumn : Model -> Element FrontendMsg
 mainColumn model =
     E.column (mainColumnStyle model)
-        [ E.column [ E.spacing 12, E.width (appWidth_ 0 model), E.height (E.px (appHeight model)) ]
+        [ E.column [ E.spacing 6, E.width (appWidth_ 0 model), E.height (E.px (appHeight model)) ]
             [ E.row [ E.width (appWidth_ 0 model) ] [ title "Snippet Manager", E.el [ E.alignRight ] (Button.expandCollapseView model.viewMode) ]
             , header model
             , E.row [ E.spacing 12 ] [ lhs model, rhs model ]
@@ -69,13 +69,40 @@ lhs model =
 
 
 rhs model =
-    E.column [ E.spacing 12, E.width (panelWidth 0 model) ]
-        [ E.column [ E.spacing 12 ]
-            [ View.Utility.showIf (model.appMode == EditMode) (rhsHeader model)
-            , View.Utility.showIf (model.appMode /= EditMode) (rhsHeader model)
-            , View.Input.snippetText model (panelWidth_ 0 model) (appHeight model - 154) model.snippetText
-            ]
-        ]
+    case model.appMode of
+        ViewMode ->
+            case model.currentSnippet of
+                Nothing ->
+                    E.none
+
+                Just snippet ->
+                    E.column [ E.spacing 18, E.width (panelWidth 0 model) ]
+                        [ E.column [ E.spacing 18 ]
+                            [ rhsHeader model
+                            , E.column
+                                [ E.width (panelWidth 0 model)
+                                , E.height (E.px <| appHeight model - 155)
+                                , E.scrollbarY
+                                , E.alignTop
+                                , Background.color Color.white
+                                , E.paddingXY 12 12
+                                , Font.size 14
+                                , View.Utility.elementAttribute "line-height" "1.5"
+                                ]
+                                [ Markdown.Render.toHtml Markdown.Option.ExtendedMath snippet.content
+                                    |> Html.map MarkdownMsg
+                                    |> E.html
+                                ]
+                            ]
+                        ]
+
+        EditMode ->
+            E.column [ E.spacing 18, E.width (panelWidth 0 model) ]
+                [ E.column [ E.spacing 18 ]
+                    [ rhsHeader model
+                    , View.Input.snippetText model (panelWidth_ 0 model) (appHeight model - 154) model.snippetText
+                    ]
+                ]
 
 
 viewSnippets : Model -> List Datum -> Element FrontendMsg
@@ -92,6 +119,24 @@ viewSnippets model filteredSnippets =
 
 viewSnippet : Model -> Datum -> Element FrontendMsg
 viewSnippet model datum =
+    let
+        predicate =
+            Just datum.id == Maybe.map .id model.currentSnippet && model.snippetViewMode == SnippetExpanded
+
+        h =
+            if predicate then
+                300
+
+            else
+                60
+
+        scroll =
+            if predicate then
+                E.scrollbarY
+
+            else
+                E.clipY
+    in
     E.row
         [ Font.size 14
         , Border.widthEach { bottom = 2, top = 0, left = 0, right = 0 }
@@ -103,11 +148,13 @@ viewSnippet model datum =
         [ View.Utility.cssNode "markdown.css"
         , E.row [ E.spacing 12, E.paddingEach { left = 6, right = 0, top = 0, bottom = 0 } ]
             [ E.el [] (Button.editItem model.appMode datum)
+            , Button.viewContent datum
             , E.column
                 [ E.width (appWidth_ 0 model)
                 , E.clipY
                 , E.height (E.px 36)
                 , E.moveUp 3
+                , scroll
                 , View.Utility.elementAttribute "line-height" "1.5"
                 ]
                 [ Markdown.Render.toHtml Markdown.Option.ExtendedMath datum.content
@@ -120,8 +167,8 @@ viewSnippet model datum =
 
 footer model =
     E.row
-        [ E.spacing 12
-        , E.paddingXY 0 8
+        [ E.spacing 18
+        , E.paddingEach { top = 20, bottom = 8, left = 0, right = 0 }
         , E.height (E.px 25)
         , E.width (appWidth_ 0 model)
         , Font.size 14

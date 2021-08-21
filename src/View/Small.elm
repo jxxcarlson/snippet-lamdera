@@ -77,7 +77,7 @@ viewSnippets model filteredSnippets =
         , E.scrollbarY
         , E.width (E.px <| appWidth_ model)
         , E.height (E.px (appHeight_ model - 270))
-        , Background.color Color.darkBlue
+        , Background.color Color.blueGray
         ]
         (List.map (viewSnippet model) filteredSnippets)
 
@@ -203,20 +203,6 @@ docsInfo model n =
         , Font.color Color.lightBlue
         ]
         (E.text <| "filtered/fetched = " ++ String.fromInt n ++ "/" ++ String.fromInt total)
-
-
-docList_ : Model -> List (Element FrontendMsg) -> Element FrontendMsg
-docList_ model filteredDocs =
-    E.column
-        [ View.Style.bgGray 0.85
-        , E.height (E.px (panelHeight_ model - searchDocPaneHeight))
-        , E.spacing 4
-        , E.width (E.px docListWidth)
-        , E.paddingXY 8 12
-        , Background.color Color.paleViolet
-        , E.scrollbarY
-        ]
-        filteredDocs
 
 
 viewDummy : Model -> Element FrontendMsg

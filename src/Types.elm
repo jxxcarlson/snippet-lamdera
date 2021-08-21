@@ -59,7 +59,7 @@ type SnippetViewMode
 
 
 type AppMode
-    = RestMode
+    = ViewMode
     | EditMode
 
 
@@ -112,6 +112,7 @@ type FrontendMsg
     | Fetch
     | Close
     | EditItem Datum
+    | ViewContent Datum
     | Delete
     | InputSnippetFilter String
     | ExpandContractItem Datum
