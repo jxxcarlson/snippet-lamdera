@@ -73,7 +73,7 @@ init url key =
       , currentUser = Nothing
       , inputUsername = ""
       , inputPassword = ""
-      , viewMode = SmallView
+      , viewMode = LargeView
       }
     , Cmd.batch [ Frontend.Cmd.setupWindow, Frontend.Cmd.getRandomNumberFE ]
     )
