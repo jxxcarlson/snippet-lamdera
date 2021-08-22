@@ -8,6 +8,7 @@ module Data exposing
     , fixUrls
     , insertDatum
     , make
+    , noDocsDocument
     , remove
     , setupUser
     , signInDocument
@@ -72,6 +73,14 @@ signedInDocument =
 
 welcomeDocument =
     system (Time.millisToPosix 0) "3" "Info" welcomeText
+
+
+noDocsDocument =
+    system (Time.millisToPosix 0) "6" "Info" """Click **New** above to make a snippet.
+
+![](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQRF0zeCqrYUxEmZXRq_IdQtrqlYyAWZ627og&usqp=CAU)
+
+"""
 
 
 startupDocument =

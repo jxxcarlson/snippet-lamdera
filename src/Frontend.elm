@@ -58,7 +58,7 @@ init url key =
       , users = []
 
       -- UI
-      , windowWidth = 600
+      , windowWidth = 1200
       , windowHeight = 900
       , popupStatus = PopupClosed
 
@@ -251,7 +251,7 @@ update msg model =
                                     ( { model
                                         | snippets = newSnippets
                                         , currentSnippet = Just newSnippet
-                                        , appMode = EditMode
+                                        , appMode = ViewMode
                                         , snippetText = newSnippet.content
                                         , randomSeed = seed
                                       }
@@ -381,8 +381,16 @@ updateFromBackend msg model =
             let
                 snippets =
                     List.sortBy (\snip -> -(Time.posixToMillis snip.modificationData)) dataList
+
+                currentSnippet =
+                    case List.head snippets of
+                        Nothing ->
+                            Just Data.noDocsDocument
+
+                        Just snippet ->
+                            Just snippet
             in
-            ( { model | snippets = snippets, currentSnippet = List.head snippets }, Cmd.none )
+            ( { model | snippets = snippets, currentSnippet = currentSnippet }, Cmd.none )
 
         -- USER
         SendUser user ->

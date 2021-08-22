@@ -120,6 +120,10 @@ rhs model =
 
 viewSnippets : Model -> List Datum -> Element FrontendMsg
 viewSnippets model filteredSnippets =
+    let
+        currentSnippetId =
+            Maybe.map .id model.currentSnippet |> Maybe.withDefault "---"
+    in
     E.column
         [ E.paddingXY 0 0
         , E.scrollbarY
@@ -127,47 +131,52 @@ viewSnippets model filteredSnippets =
         , E.height (E.px (appHeight model - 155))
         , Background.color Color.blueGray
         ]
-        (List.map (viewSnippet model) filteredSnippets)
+        (List.map (viewSnippet model currentSnippetId) filteredSnippets)
 
 
-viewSnippet : Model -> Datum -> Element FrontendMsg
-viewSnippet model datum =
+viewSnippet : Model -> String -> Datum -> Element FrontendMsg
+viewSnippet model currentSnippetId datum =
     let
-        predicate =
-            Just datum.id == Maybe.map .id model.currentSnippet && model.snippetViewMode == SnippetExpanded
-
-        h =
-            if predicate then
-                300
+        borderWidth =
+            if datum.id == currentSnippetId then
+                Border.widthEach { bottom = 2, top = 2, left = 2, right = 2 }
 
             else
-                60
+                Border.widthEach { bottom = 2, top = 0, left = 0, right = 0 }
 
-        scroll =
-            if predicate then
-                E.scrollbarY
+        bg =
+            if datum.id == currentSnippetId then
+                Background.color Color.palePink
 
             else
-                E.clipY
+                Background.color Color.white
+
+        borderColor =
+            if datum.id == currentSnippetId then
+                Border.color Color.darkRed
+
+            else
+                Border.color Color.darkBlue
     in
     E.row
         [ Font.size 14
-        , Border.widthEach { bottom = 2, top = 0, left = 0, right = 0 }
-        , Border.color Color.darkBlue
+        , borderWidth
+        , borderColor
         , E.height (E.px 36)
-        , E.width (appWidth_ 0 model)
-        , Background.color Color.veryPaleBlue
+        , E.width (panelWidth 0 model)
+        , bg
         , View.Utility.elementAttribute "id" "__RENDERED_TEXT__"
         ]
         [ E.row [ E.spacing 12, E.paddingEach { left = 6, right = 0, top = 0, bottom = 0 } ]
             [ E.el [] (Button.editItem datum)
             , Button.viewContent datum
             , E.column
-                [ E.width (appWidth_ 0 model)
+                [ E.width (panelWidth -90 model)
                 , E.clipY
+                , E.clipX
                 , E.height (E.px 36)
                 , E.moveUp 3
-                , scroll
+                , E.scrollbarY
                 , View.Utility.elementAttribute "line-height" "1.5"
                 ]
                 [ View.Utility.cssNode "markdown.css"
