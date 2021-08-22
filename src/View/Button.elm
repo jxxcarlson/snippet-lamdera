@@ -126,7 +126,7 @@ help =
 
 view : Element FrontendMsg
 view =
-    buttonTemplate [] Close "View"
+    buttonTemplate [] Close "Cancel"
 
 
 new : Element FrontendMsg
