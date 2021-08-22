@@ -60,6 +60,7 @@ type SnippetViewMode
 
 type AppMode
     = ViewMode
+    | NewSnippetMode
     | EditMode
 
 

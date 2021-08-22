@@ -32,7 +32,11 @@ mainColumn : Model -> Element FrontendMsg
 mainColumn model =
     E.column (mainColumnStyle model)
         [ E.column [ E.spacing 6, E.width (appWidth_ 0 model), E.height (E.px (appHeight model)) ]
-            [ E.row [ E.width (appWidth_ 0 model) ] [ title "Snippet Manager", E.el [ E.alignRight ] (Button.expandCollapseView model.viewMode) ]
+            [ E.row [ E.width (appWidth_ 0 model) ]
+                [ title "Snippet Manager"
+
+                -- , E.el [ E.alignRight ] (Button.expandCollapseView model.viewMode)
+                ]
             , header model
             , E.row [ E.spacing 12 ] [ lhs model, rhs model ]
             , footer model
@@ -96,6 +100,14 @@ rhs model =
                                 ]
                             ]
                         ]
+
+        NewSnippetMode ->
+            E.column [ E.spacing 18, E.width (panelWidth 0 model) ]
+                [ E.column [ E.spacing 18 ]
+                    [ rhsHeader model
+                    , View.Input.snippetText model (panelWidth_ 0 model) (appHeight model - 154) model.snippetText
+                    ]
+                ]
 
         EditMode ->
             E.column [ E.spacing 18, E.width (panelWidth 0 model) ]
@@ -240,6 +252,21 @@ rhsHeader model =
 
                     Just snippet ->
                         Button.editItem2 snippet
+                ]
+
+        NewSnippetMode ->
+            E.row [ E.spacing 12 ]
+                [ Button.starSnippet
+                , Button.new
+                , case model.currentSnippet of
+                    Nothing ->
+                        E.none
+
+                    Just snippet ->
+                        Button.editItem2 snippet
+                , Button.save
+                , Button.view
+                , Button.delete
                 ]
 
         EditMode ->

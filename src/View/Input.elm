@@ -61,6 +61,9 @@ snippetText model width_ height_ text_ =
                 ViewMode ->
                     [ Background.color Color.paleViolet ]
 
+                NewSnippetMode ->
+                    [ Background.color Color.palePink ]
+
                 EditMode ->
                     [ Background.color Color.paleBlueGray ]
     in

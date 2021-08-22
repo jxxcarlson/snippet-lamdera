@@ -228,6 +228,36 @@ update msg model =
                         ViewMode ->
                             ( model, Cmd.none )
 
+                        NewSnippetMode ->
+                            case model.currentSnippet of
+                                Nothing ->
+                                    ( model, Cmd.none )
+
+                                Just snippet ->
+                                    let
+                                        { token, seed } =
+                                            Token.get model.randomSeed
+
+                                        newSnippet =
+                                            { snippet
+                                                | content = model.snippetText |> Data.fixUrls
+                                                , modificationData = model.currentTime
+                                                , id = token |> Debug.log "TOKEN"
+                                            }
+
+                                        newSnippets =
+                                            newSnippet :: model.snippets
+                                    in
+                                    ( { model
+                                        | snippets = newSnippets
+                                        , currentSnippet = Just newSnippet
+                                        , appMode = EditMode
+                                        , snippetText = newSnippet.content
+                                        , randomSeed = seed
+                                      }
+                                    , sendToBackend (SaveDatum user.username newSnippet)
+                                    )
+
                         EditMode ->
                             case model.currentSnippet of
                                 Nothing ->
@@ -283,8 +313,8 @@ update msg model =
 
         New ->
             ( { model
-                | appMode = EditMode
-                , snippetText = ""
+                | snippetText = ""
+                , appMode = NewSnippetMode
               }
             , Cmd.none
             )
