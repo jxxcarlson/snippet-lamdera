@@ -8,6 +8,7 @@ module View.Button exposing
     , exportYaml
     , fetch
     , getUsers
+    , help
     , linkTemplate
     , new
     , randomize
@@ -116,6 +117,11 @@ save =
 fetch : Element FrontendMsg
 fetch =
     buttonTemplate [] Fetch "Fetch"
+
+
+help : Element FrontendMsg
+help =
+    buttonTemplate [] Help "Help"
 
 
 view : Element FrontendMsg

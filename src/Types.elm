@@ -110,6 +110,7 @@ type FrontendMsg
     | New
     | Save
     | Fetch
+    | Help
     | Close
     | EditItem Datum
     | ViewContent Datum

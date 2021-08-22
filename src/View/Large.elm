@@ -147,9 +147,7 @@ viewSnippet model datum =
         , Background.color Color.veryPaleBlue
         , View.Utility.elementAttribute "id" "__RENDERED_TEXT__"
         ]
-        [ View.Utility.cssNode "markdown.css"
-        , View.Utility.katexCSS
-        , E.row [ E.spacing 12, E.paddingEach { left = 6, right = 0, top = 0, bottom = 0 } ]
+        [ E.row [ E.spacing 12, E.paddingEach { left = 6, right = 0, top = 0, bottom = 0 } ]
             [ E.el [] (Button.editItem datum)
             , Button.viewContent datum
             , E.column
@@ -160,7 +158,9 @@ viewSnippet model datum =
                 , scroll
                 , View.Utility.elementAttribute "line-height" "1.5"
                 ]
-                [ Markdown.Render.toHtml Markdown.Option.ExtendedMath datum.content
+                [ View.Utility.cssNode "markdown.css"
+                , View.Utility.katexCSS
+                , Markdown.Render.toHtml Markdown.Option.ExtendedMath datum.content
                     |> Html.map MarkdownMsg
                     |> E.html
                 ]
@@ -224,6 +224,7 @@ signedInHeader model user =
     E.row [ E.spacing 12 ]
         [ Button.signOut user.username
         , Button.fetch
+        , Button.help
         ]
 
 

@@ -12,6 +12,7 @@ module Data exposing
     , setupUser
     , signInDocument
     , signOutDocument
+    , startupDocument
     , system
     , welcomeDocument
     )
@@ -68,19 +69,23 @@ welcomeDocument =
     system (Time.millisToPosix 0) "3" "Info" welcomeText
 
 
+startupDocument =
+    system (Time.millisToPosix 0) "4" "Info" "Please sign in our sign up."
+
+
 welcomeText =
     """
-- **To Sign Up:** Enter a username with at least four letters or numbers beginning with a letter, then enter a password.
+## Welcome!
 
-- **To edit a snippet:** click the left (slate gray) button.
 
-- **To view a snippet:** click the right (pink) button.
 
 ### Searching for snippets
 
 Put words or fragments of words in the search box separated by a space.  For example 'atom smasher' will find
 all snippets containing 'atom' and 'smasher'.  Searching for 'ato sma' will do the same.  Searching for
 'atom -smash' will find all snippets contaning 'atom' but not 'smash'.
+
+- Use the right ★ button one or more times to star a snippet. Use the left ★ button one or more times to search for snippets.
 
 ### Sorting snippets
 
@@ -97,7 +102,6 @@ You can use markdown and also LaTeX-style math formulas: $a^2 + b^2 = c^2$ and
 $$
 \\int_0^1 x^n dx = \\frac{1}{n+1}
 $$
-
 
 
 ### Exports

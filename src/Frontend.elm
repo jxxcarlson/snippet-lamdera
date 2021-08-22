@@ -65,7 +65,7 @@ init url key =
       -- DATA
       , snippetText = ""
       , snippets = []
-      , currentSnippet = Just Data.welcomeDocument
+      , currentSnippet = Just Data.startupDocument
       , inputSnippetFilter = ""
       , snippetViewMode = SnippetCollapsed
 
@@ -214,6 +214,9 @@ update msg model =
 
                 Just user ->
                     ( model, sendToBackend (SendUserData user.username) )
+
+        Help ->
+            ( { model | currentSnippet = Just Data.welcomeDocument, appMode = ViewMode }, Cmd.none )
 
         Save ->
             case model.currentUser of
