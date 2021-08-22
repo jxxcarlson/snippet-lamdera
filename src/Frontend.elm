@@ -260,7 +260,7 @@ update msg model =
 
                 Just snippet ->
                     ( { model
-                        | currentSnippet = Nothing
+                        | currentSnippet = Just Data.deletedSnippetDocument
                         , snippetText = ""
                         , appMode = ViewMode
                         , snippets = List.filter (\snip -> snip.id /= snippet.id) model.snippets

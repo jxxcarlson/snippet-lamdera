@@ -3,6 +3,7 @@ module Data exposing
     , DataFile
     , DataId
     , Datum
+    , deletedSnippetDocument
     , filter
     , fixUrls
     , insertDatum
@@ -54,8 +55,18 @@ signOutDocument =
     system (Time.millisToPosix 0) "0" "Info" signOutText
 
 
+deletedSnippetDocument =
+    system (Time.millisToPosix 0) "1" "Info" deletedSnippetText
+
+
 signInDocument =
-    system (Time.millisToPosix 0) "0" "Info" signInText
+    system (Time.millisToPosix 0) "2" "Info" signInText
+
+
+deletedSnippetText =
+    """
+Snippet deleted
+"""
 
 
 signInText =
