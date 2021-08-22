@@ -65,7 +65,7 @@ init url key =
       -- DATA
       , snippetText = ""
       , snippets = []
-      , currentSnippet = Just Data.signInDocument
+      , currentSnippet = Just Data.welcomeDocument
       , inputSnippetFilter = ""
       , snippetViewMode = SnippetCollapsed
 

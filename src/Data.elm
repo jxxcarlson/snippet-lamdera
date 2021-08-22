@@ -13,6 +13,7 @@ module Data exposing
     , signInDocument
     , signOutDocument
     , system
+    , welcomeDocument
     )
 
 import Dict exposing (Dict)
@@ -61,6 +62,48 @@ deletedSnippetDocument =
 
 signInDocument =
     system (Time.millisToPosix 0) "2" "Info" signInText
+
+
+welcomeDocument =
+    system (Time.millisToPosix 0) "3" "Info" welcomeText
+
+
+welcomeText =
+    """
+- **To Sign Up:** Enter a username with at least four letters or numbers beginning with a letter, then enter a password.
+
+- **To edit a snippet:** click the left (slate gray) button.
+
+- **To view a snippet:** click the right (pink) button.
+
+### Searching for snippets
+
+Put words or fragments of words in the search box separated by a space.  For example 'atom smasher' will find
+all snippets containing 'atom' and 'smasher'.  Searching for 'ato sma' will do the same.  Searching for
+'atom -smash' will find all snippets contaning 'atom' but not 'smash'.
+
+### Sorting snippets
+
+- **A** sorts snippets alphabetically.
+
+- **D** sorts snippets by the date-time of last modification.
+
+- **R** sorts snippets randomly
+
+### Markdown
+
+You can use markdown and also LaTeX-style math formulas: $a^2 + b^2 = c^2$ and
+
+$$
+\\int_0^1 x^n dx = \\frac{1}{n+1}
+$$
+
+
+
+### Expofg
+
+- The **Export** button will export all of your snippets to a `.yaml` file.
+"""
 
 
 deletedSnippetText =
