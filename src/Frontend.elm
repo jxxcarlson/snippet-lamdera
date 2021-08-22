@@ -394,7 +394,7 @@ updateFromBackend msg model =
 
 view : Model -> { title : String, body : List (Html.Html FrontendMsg) }
 view model =
-    { title = ""
+    { title = "Snippets"
     , body =
         case model.viewMode of
             SmallView ->
