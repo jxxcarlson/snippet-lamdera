@@ -77,7 +77,10 @@ welcomeText =
     """
 ## Welcome!
 
+### Buttons
 
+- **Left square pink button:** Edit snippet
+- **Left square blue-gray button:** View snippet
 
 ### Searching for snippets
 
@@ -106,7 +109,11 @@ $$
 
 ### Exports
 
-- The **Export** button will export all of your snippets to a `.yaml` file.
+- The **Export** button will export all of your snippets to a `.yaml` file. Your data is not a prisoner!
+
+### Contact
+
+Jim Carlson: jxxcarlson on the Elm slack and at g mail.
 """
 
 

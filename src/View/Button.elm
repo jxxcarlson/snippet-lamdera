@@ -148,11 +148,23 @@ editItem datum =
     buttonTemplate
         [ E.width (E.px 20)
         , E.height (E.px 20)
-        , Background.color Color.blueGray
+        , Background.color Color.violet
         , Font.color Color.palePink
         , View.Utility.elementAttribute "title" "Edit"
         ]
         (EditItem datum)
+        ""
+
+
+viewContent datum =
+    buttonTemplate
+        [ E.width (E.px 20)
+        , E.height (E.px 20)
+        , Background.color Color.blueGray
+        , Font.color Color.palePink
+        , View.Utility.elementAttribute "title" "view content"
+        ]
+        (ViewContent datum)
         ""
 
 
@@ -172,18 +184,6 @@ expandCollapse datum =
         , View.Utility.elementAttribute "title" "Expand/collapse item"
         ]
         (ExpandContractItem datum)
-        ""
-
-
-viewContent datum =
-    buttonTemplate
-        [ E.width (E.px 20)
-        , E.height (E.px 20)
-        , Background.color Color.violet
-        , Font.color Color.palePink
-        , View.Utility.elementAttribute "title" "view content"
-        ]
-        (ViewContent datum)
         ""
 
 
