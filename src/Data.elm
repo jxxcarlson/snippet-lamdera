@@ -105,12 +105,7 @@ all snippets containing 'atom' and 'smasher'.  Searching for 'ato sma' will do t
 
 ### Markdown
 
-You can use markdown and also LaTeX-style math formulas: $a^2 + b^2 = c^2$ and
-
-$$
-\\int_0^1 x^n dx = \\frac{1}{n+1}
-$$
-
+You can use it!
 
 ### Exports
 
@@ -119,6 +114,15 @@ $$
 ### Contact
 
 Jim Carlson: jxxcarlson on the Elm slack and at g mail.
+"""
+
+
+scratch =
+    """ and also LaTeX-style math formulas: $a^2 + b^2 = c^2$ and
+             
+             $$
+             \\int_0^1 x^n dx = \\frac{1}{n+1}
+             $$
 """
 
 
