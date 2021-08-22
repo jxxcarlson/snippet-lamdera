@@ -33,7 +33,7 @@ mainColumn model =
     E.column (mainColumnStyle model)
         [ E.column [ E.spacing 6, E.width (appWidth_ 0 model), E.height (E.px (appHeight model)) ]
             [ E.row [ E.width (appWidth_ 0 model) ]
-                [ title "Snippet Manager"
+                [ title "Snippets"
 
                 -- , E.el [ E.alignRight ] (Button.expandCollapseView model.viewMode)
                 ]
