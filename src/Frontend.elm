@@ -242,7 +242,7 @@ update msg model =
                                             { snippet
                                                 | content = model.snippetText |> Data.fixUrls
                                                 , modificationData = model.currentTime
-                                                , id = token |> Debug.log "TOKEN"
+                                                , id = token
                                             }
 
                                         newSnippets =
