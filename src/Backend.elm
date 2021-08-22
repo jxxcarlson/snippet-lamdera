@@ -125,13 +125,13 @@ updateFromFrontend sessionId clientId msg model =
                     if Authentication.verify username transitPassword model.authenticationDict then
                         ( model
                         , Cmd.batch
-                            [ sendToFrontend clientId (SendUser userData.user)
-                            , sendToFrontend clientId
+                            [ sendToFrontend clientId
                                 (SendMessage <|
                                     "Success! Random atmospheric integer: "
                                         ++ (Maybe.map String.fromInt model.randomAtmosphericInt |> Maybe.withDefault "NONE")
                                 )
                             , Backend.Cmd.sendUserData Infinity username clientId model
+                            , sendToFrontend clientId (SendUser userData.user)
                             ]
                         )
 

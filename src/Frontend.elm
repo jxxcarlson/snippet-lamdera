@@ -386,7 +386,7 @@ updateFromBackend msg model =
 
         -- USER
         SendUser user ->
-            ( { model | currentUser = Just user }, Cmd.none )
+            ( { model | currentUser = Just user, currentSnippet = Just Data.signedInDocument }, Cmd.none )
 
         SendMessage message ->
             ( { model | message = message }, Cmd.none )

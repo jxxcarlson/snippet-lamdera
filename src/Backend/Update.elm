@@ -43,7 +43,7 @@ gotAtomsphericRandomNumber model result =
                     )
 
         Err _ ->
-            ( model, broadcast (SendMessage "Could not get random atmospheric integer")  )
+            ( model, broadcast (SendMessage "Could not get random atmospheric integer") )
 
 
 

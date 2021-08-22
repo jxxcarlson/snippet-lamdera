@@ -32,12 +32,16 @@ users authDict =
 
 insert : User -> String -> String -> AuthenticationDict -> Result String AuthenticationDict
 insert user salt transitPassword authDict =
-    case Credentials.hashPw salt transitPassword of
-        Err _ ->
-            Err "Could not generate credentials"
+    if String.length user.username < 4 then
+        Err "Sorry, your username must have at least four characters"
 
-        Ok credentials ->
-            Ok (Dict.insert user.username { user = user, credentials = credentials } authDict)
+    else
+        case Credentials.hashPw salt transitPassword of
+            Err _ ->
+                Err "Could not set you up. Sorry!"
+
+            Ok credentials ->
+                Ok (Dict.insert user.username { user = user, credentials = credentials } authDict)
 
 
 encryptForTransit : String -> String

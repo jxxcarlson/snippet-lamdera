@@ -12,6 +12,7 @@ module Data exposing
     , setupUser
     , signInDocument
     , signOutDocument
+    , signedInDocument
     , startupDocument
     , system
     , welcomeDocument
@@ -63,6 +64,10 @@ deletedSnippetDocument =
 
 signInDocument =
     system (Time.millisToPosix 0) "2" "Info" signInText
+
+
+signedInDocument =
+    system (Time.millisToPosix 0) "5" "Info" "**Success!** — signed in."
 
 
 welcomeDocument =
