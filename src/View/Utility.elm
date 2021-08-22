@@ -1,6 +1,7 @@
 module View.Utility exposing
     ( cssNode
     , elementAttribute
+    , katexCSS
     , noFocus
     , showIf
     , showIfIsAdmin
@@ -12,6 +13,16 @@ import Html
 import Html.Attributes as HA
 import Task exposing (Task)
 import Types exposing (FrontendModel, FrontendMsg)
+
+
+katexCSS : Element FrontendMsg
+katexCSS =
+    Element.html <|
+        Html.node "link"
+            [ HA.attribute "rel" "stylesheet"
+            , HA.attribute "href" "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css"
+            ]
+            []
 
 
 showIfIsAdmin : FrontendModel -> Element msg -> Element msg

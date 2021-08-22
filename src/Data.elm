@@ -100,7 +100,7 @@ $$
 
 
 
-### Expofg
+### Exports
 
 - The **Export** button will export all of your snippets to a `.yaml` file.
 """

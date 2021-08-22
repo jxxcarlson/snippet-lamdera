@@ -145,8 +145,10 @@ viewSnippet model datum =
         , E.height (E.px 36)
         , E.width (appWidth_ 0 model)
         , Background.color Color.veryPaleBlue
+        , View.Utility.elementAttribute "id" "__RENDERED_TEXT__"
         ]
         [ View.Utility.cssNode "markdown.css"
+        , View.Utility.katexCSS
         , E.row [ E.spacing 12, E.paddingEach { left = 6, right = 0, top = 0, bottom = 0 } ]
             [ E.el [] (Button.editItem datum)
             , Button.viewContent datum
