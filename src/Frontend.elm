@@ -135,12 +135,12 @@ update msg model =
         -- USER
         SignIn ->
             if String.length model.inputPassword >= 8 then
-                ( model
+                ( { model | currentSnippet = Just Data.signInDocument }
                 , sendToBackend (SignInOrSignUp model.inputUsername (Authentication.encryptForTransit model.inputPassword))
                 )
 
             else
-                ( { model | message = "Password must be at least 8 letters long." }, Cmd.none )
+                ( { model | message = "Password must be at least 8 letters long.", currentSnippet = Just Data.signInDocument }, Cmd.none )
 
         InputUsername str ->
             ( { model | inputUsername = str }, Cmd.none )
@@ -156,6 +156,8 @@ update msg model =
                 , inputPassword = ""
                 , snippetText = ""
                 , snippets = []
+                , currentSnippet = Just Data.signOutDocument
+                , appMode = ViewMode
               }
             , Cmd.none
             )
@@ -192,6 +194,9 @@ update msg model =
         ModificationOrder ->
             ( { model | snippets = List.sortBy (\snip -> -(Time.posixToMillis snip.modificationData)) model.snippets }, Cmd.none )
 
+        AlphabeticOrder ->
+            ( { model | snippets = List.sortBy (\snip -> snip.content) model.snippets }, Cmd.none )
+
         RandomOrder ->
             let
                 { token, seed } =
@@ -218,21 +223,7 @@ update msg model =
                 Just user ->
                     case model.appMode of
                         ViewMode ->
-                            let
-                                { token, seed } =
-                                    Token.get model.randomSeed
-
-                                snippet =
-                                    Data.make user.username model.currentTime token model.snippetText
-                            in
-                            ( { model
-                                | snippets = snippet :: model.snippets
-                                , randomSeed = seed
-                                , currentSnippet = Nothing
-                                , snippetText = ""
-                              }
-                            , sendToBackend (SaveDatum user.username snippet)
-                            )
+                            ( model, Cmd.none )
 
                         EditMode ->
                             case model.currentSnippet of
@@ -252,9 +243,9 @@ update msg model =
                                     in
                                     ( { model
                                         | snippets = newSnippets
+                                        , currentSnippet = Just newSnippet
                                         , appMode = ViewMode
-                                        , currentSnippet = Nothing
-                                        , snippetText = ""
+                                        , snippetText = newSnippet.content
                                       }
                                     , sendToBackend (UpdateDatum user.username newSnippet)
                                     )
@@ -289,7 +280,7 @@ update msg model =
 
         New ->
             ( { model
-                | appMode = ViewMode
+                | appMode = EditMode
                 , snippetText = ""
               }
             , Cmd.none
@@ -354,7 +345,11 @@ updateFromBackend msg model =
 
         -- DATA
         GotUserData dataList ->
-            ( { model | snippets = dataList }, Cmd.none )
+            let
+                snippets =
+                    List.sortBy (\snip -> -(Time.posixToMillis snip.modificationData)) dataList
+            in
+            ( { model | snippets = snippets, currentSnippet = List.head snippets }, Cmd.none )
 
         -- USER
         SendUser user ->

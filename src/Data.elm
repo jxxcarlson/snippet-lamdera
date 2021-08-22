@@ -9,6 +9,9 @@ module Data exposing
     , make
     , remove
     , setupUser
+    , signInDocument
+    , signOutDocument
+    , system
     )
 
 import Dict exposing (Dict)
@@ -33,6 +36,38 @@ type alias Datum =
     , creationData : Time.Posix
     , modificationData : Time.Posix
     }
+
+
+system : Time.Posix -> String -> String -> String -> Datum
+system currentTime id title content =
+    { id = id
+    , title = title
+    , username = "system"
+    , content = fixUrls content
+    , tags = []
+    , creationData = currentTime
+    , modificationData = currentTime
+    }
+
+
+signOutDocument =
+    system (Time.millisToPosix 0) "0" "Info" signOutText
+
+
+signInDocument =
+    system (Time.millisToPosix 0) "0" "Info" signInText
+
+
+signInText =
+    """
+Please sign in or sign up
+"""
+
+
+signOutText =
+    """
+You are signed out.
+"""
 
 
 make : Username -> Time.Posix -> String -> String -> Datum

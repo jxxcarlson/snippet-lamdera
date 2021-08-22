@@ -118,6 +118,7 @@ type FrontendMsg
     | ExpandContractItem Datum
     | RandomOrder
     | ModificationOrder
+    | AlphabeticOrder
     | RandomizedOrder (List Datum)
     | MarkdownMsg Markdown.Render.MarkdownMsg
     | ExportYaml

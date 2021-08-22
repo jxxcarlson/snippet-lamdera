@@ -57,8 +57,9 @@ lhs model =
     E.column [ E.spacing 12, E.width (panelWidth 0 model) ]
         [ E.column [ E.spacing 12 ]
             [ E.row [ E.spacing 8, E.width (panelWidth 0 model) ]
-                [ View.Input.snippetFilter model (panelWidth_ -230 model)
+                [ View.Input.snippetFilter model (panelWidth_ -260 model)
                 , Button.searchByStarred
+                , Button.sortAlphabetically
                 , Button.sortByModificationDate
                 , Button.randomize
                 , E.el [ Font.color Color.white, Font.size 14, E.alignRight ] (E.text ratio)
@@ -147,7 +148,7 @@ viewSnippet model datum =
         ]
         [ View.Utility.cssNode "markdown.css"
         , E.row [ E.spacing 12, E.paddingEach { left = 6, right = 0, top = 0, bottom = 0 } ]
-            [ E.el [] (Button.editItem model.appMode datum)
+            [ E.el [] (Button.editItem datum)
             , Button.viewContent datum
             , E.column
                 [ E.width (appWidth_ 0 model)
@@ -225,12 +226,33 @@ signedInHeader model user =
 
 
 rhsHeader model =
-    E.row [ E.spacing 12 ]
-        [ Button.starSnippet
-        , Button.save
-        , Button.cancel
-        , Button.delete
-        ]
+    case model.appMode of
+        ViewMode ->
+            E.row [ E.spacing 12 ]
+                [ Button.starSnippet
+                , Button.new
+                , case model.currentSnippet of
+                    Nothing ->
+                        E.none
+
+                    Just snippet ->
+                        Button.editItem2 snippet
+                ]
+
+        EditMode ->
+            E.row [ E.spacing 12 ]
+                [ Button.starSnippet
+                , Button.new
+                , case model.currentSnippet of
+                    Nothing ->
+                        E.none
+
+                    Just snippet ->
+                        Button.editItem2 snippet
+                , Button.save
+                , Button.view
+                , Button.delete
+                ]
 
 
 docsInfo model n =

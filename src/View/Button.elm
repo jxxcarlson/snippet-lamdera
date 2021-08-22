@@ -1,8 +1,8 @@
 module View.Button exposing
     ( adminPopup
-    , cancel
     , delete
     , editItem
+    , editItem2
     , expandCollapse
     , expandCollapseView
     , exportYaml
@@ -16,8 +16,10 @@ module View.Button exposing
     , searchByStarred
     , signIn
     , signOut
+    , sortAlphabetically
     , sortByModificationDate
     , starSnippet
+    , view
     , viewContent
     )
 
@@ -89,7 +91,11 @@ randomize =
 
 
 sortByModificationDate =
-    buttonTemplate [ View.Utility.elementAttribute "title" "Sort by date modified" ] ModificationOrder "M"
+    buttonTemplate [ View.Utility.elementAttribute "title" "Sort by date modified" ] ModificationOrder "D"
+
+
+sortAlphabetically =
+    buttonTemplate [ View.Utility.elementAttribute "title" "Sort alphabetically" ] AlphabeticOrder "A"
 
 
 searchByStarred : Element FrontendMsg
@@ -112,9 +118,9 @@ fetch =
     buttonTemplate [] Fetch "Fetch"
 
 
-cancel : Element FrontendMsg
-cancel =
-    buttonTemplate [] Close "Close"
+view : Element FrontendMsg
+view =
+    buttonTemplate [] Close "View"
 
 
 new : Element FrontendMsg
@@ -132,7 +138,7 @@ exportYaml =
     buttonTemplate [] ExportYaml "Export"
 
 
-editItem appMode datum =
+editItem datum =
     buttonTemplate
         [ E.width (E.px 20)
         , E.height (E.px 20)
@@ -142,6 +148,13 @@ editItem appMode datum =
         ]
         (EditItem datum)
         ""
+
+
+editItem2 datum =
+    buttonTemplate
+        []
+        (EditItem datum)
+        "Edit"
 
 
 expandCollapse datum =

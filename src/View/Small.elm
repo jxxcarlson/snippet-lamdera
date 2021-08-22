@@ -110,7 +110,7 @@ viewSnippet model datum =
         , Background.color Color.veryPaleBlue
         ]
         [ View.Utility.cssNode "markdown.css"
-        , E.column [ E.alignTop, E.spacing 8 ] [ E.el [] (Button.editItem model.appMode datum), Button.expandCollapse datum ]
+        , E.column [ E.alignTop, E.spacing 8 ] [ E.el [] (Button.editItem datum), Button.expandCollapse datum ]
         , E.column
             [ E.width (E.px <| appWidth_ model)
             , E.height (E.px h)
@@ -183,7 +183,7 @@ signedInHeader model user =
         [ Button.signOut user.username
         , Button.starSnippet
         , Button.save
-        , Button.cancel
+        , Button.view
         , Button.delete
         , Button.fetch
         ]
