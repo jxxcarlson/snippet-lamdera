@@ -68,6 +68,7 @@ init url key =
       , currentSnippet = Just Data.startupDocument
       , inputSnippetFilter = ""
       , snippetViewMode = SnippetCollapsed
+      , sortMode = SortByDate
 
       -- USER
       , currentUser = Nothing
@@ -192,17 +193,17 @@ update msg model =
             ( { model | snippetText = newSnippetText }, Cmd.none )
 
         ModificationOrder ->
-            ( { model | snippets = List.sortBy (\snip -> -(Time.posixToMillis snip.modificationData)) model.snippets }, Cmd.none )
+            ( { model | sortMode = SortByDate, snippets = List.sortBy (\snip -> -(Time.posixToMillis snip.modificationData)) model.snippets }, Cmd.none )
 
         AlphabeticOrder ->
-            ( { model | snippets = List.sortBy (\snip -> snip.content) model.snippets }, Cmd.none )
+            ( { model | sortMode = SortAlphabetically, snippets = List.sortBy (\snip -> snip.content) model.snippets }, Cmd.none )
 
         RandomOrder ->
             let
                 { token, seed } =
                     Token.get model.randomSeed
             in
-            ( { model | randomSeed = seed }, Random.generate RandomizedOrder (Random.List.shuffle model.snippets) )
+            ( { model | randomSeed = seed, sortMode = SortAtRandom }, Random.generate RandomizedOrder (Random.List.shuffle model.snippets) )
 
         RandomizedOrder snippets_ ->
             ( { model | snippets = snippets_ }, Cmd.none )

@@ -86,17 +86,25 @@ signIn =
 -- DATA
 
 
-randomize : Element FrontendMsg
-randomize =
-    buttonTemplate [ View.Utility.elementAttribute "title" "Randomize snippets" ] RandomOrder "R"
+randomize : SortMode -> Element FrontendMsg
+randomize sortMode =
+    buttonTemplate [ bg sortMode SortAtRandom, View.Utility.elementAttribute "title" "Randomize snippets" ] RandomOrder "R"
 
 
-sortByModificationDate =
-    buttonTemplate [ View.Utility.elementAttribute "title" "Sort by date modified" ] ModificationOrder "D"
+sortByModificationDate sortMode =
+    buttonTemplate [ bg sortMode SortByDate, View.Utility.elementAttribute "title" "Sort by date modified" ] ModificationOrder "D"
 
 
-sortAlphabetically =
-    buttonTemplate [ View.Utility.elementAttribute "title" "Sort alphabetically" ] AlphabeticOrder "A"
+bg sortMode targetMode =
+    if sortMode == targetMode then
+        Background.color Color.darkBlue
+
+    else
+        Background.color Color.black
+
+
+sortAlphabetically sortMode =
+    buttonTemplate [ bg sortMode SortAlphabetically, View.Utility.elementAttribute "title" "Sort alphabetically" ] AlphabeticOrder "A"
 
 
 searchByStarred : Element FrontendMsg

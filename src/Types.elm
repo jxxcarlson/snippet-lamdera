@@ -39,6 +39,7 @@ type alias FrontendModel =
     , currentSnippet : Maybe Datum
     , inputSnippetFilter : String
     , snippetViewMode : SnippetViewMode
+    , sortMode : SortMode
 
     -- UI
     , windowWidth : Int
@@ -46,6 +47,12 @@ type alias FrontendModel =
     , popupStatus : PopupStatus
     , viewMode : ViewMode
     }
+
+
+type SortMode
+    = SortByDate
+    | SortAlphabetically
+    | SortAtRandom
 
 
 type ViewMode

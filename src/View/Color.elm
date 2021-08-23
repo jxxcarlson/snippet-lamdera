@@ -51,7 +51,7 @@ medGray =
 
 black : E.Color
 black =
-    E.rgb 20 20 20
+    E.rgb255 20 20 20
 
 
 red : E.Color

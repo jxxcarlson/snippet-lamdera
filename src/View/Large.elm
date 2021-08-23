@@ -4,6 +4,7 @@ import Data exposing (Datum)
 import Element as E exposing (Element)
 import Element.Background as Background
 import Element.Border as Border
+import Element.Events as Events
 import Element.Font as Font
 import Html exposing (Html)
 import Markdown.Option
@@ -63,9 +64,9 @@ lhs model =
             [ E.row [ E.spacing 8, E.width (panelWidth 0 model) ]
                 [ View.Input.snippetFilter model (panelWidth_ -260 model)
                 , Button.searchByStarred
-                , Button.sortAlphabetically
-                , Button.sortByModificationDate
-                , Button.randomize
+                , Button.sortAlphabetically model.sortMode
+                , Button.sortByModificationDate model.sortMode
+                , Button.randomize model.sortMode
                 , E.el [ Font.color Color.white, Font.size 14, E.alignRight ] (E.text ratio)
                 ]
             , viewSnippets model filteredSnippets
@@ -164,12 +165,12 @@ viewSnippet model currentSnippetId datum =
         , borderColor
         , E.height (E.px 36)
         , E.width (panelWidth 0 model)
+        , Events.onMouseDown (ViewContent datum)
         , bg
         , View.Utility.elementAttribute "id" "__RENDERED_TEXT__"
         ]
         [ E.row [ E.spacing 12, E.paddingEach { left = 6, right = 0, top = 0, bottom = 0 } ]
             [ E.el [] (Button.editItem datum)
-            , Button.viewContent datum
             , E.column
                 [ E.width (panelWidth -90 model)
                 , E.clipY
