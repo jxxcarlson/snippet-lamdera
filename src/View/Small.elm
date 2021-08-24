@@ -214,7 +214,7 @@ viewSnippetExpanded model =
                     , E.paddingXY 0 0
                     , E.width (E.px <| appWidth_ model)
                     , E.height E.fill
-                    , Background.color Color.whiteg
+                    , Background.color Color.white
                     ]
                     [ E.column
                         [ Font.size 14
