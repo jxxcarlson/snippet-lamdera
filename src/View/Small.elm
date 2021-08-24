@@ -31,17 +31,40 @@ view model =
 
 
 mainView model =
-    case model.appMode of
-        ViewMode ->
-            case model.snippetViewMode of
-                SnippetExpanded ->
-                    viewSnippetExpanded model
+    case model.currentUser of
+        Nothing ->
+            signInOrUpView model
 
-                SnippetCollapsed ->
-                    listView model
+        Just user ->
+            case model.appMode of
+                ViewMode ->
+                    case model.snippetViewMode of
+                        SnippetExpanded ->
+                            viewSnippetExpanded model
 
-        _ ->
-            itemview model
+                        SnippetCollapsed ->
+                            listView model
+
+                _ ->
+                    itemview model
+
+
+signInOrUpView model =
+    E.column (mainColumnStyle model)
+        [ E.column
+            [ E.spacing 24
+            , Background.color Color.blueGray
+            , E.paddingXY 60 60
+            , E.width E.fill
+            , E.height E.fill
+            ]
+            [ E.el [ E.height (E.px 31), E.width E.fill, E.paddingXY 12 3, Background.color Color.paleBlue ]
+                (E.el [ E.centerY ] (E.text model.message))
+            , Button.signIn
+            , View.Input.usernameInput model
+            , View.Input.passwordInput model
+            ]
+        ]
 
 
 listView : Model -> Element FrontendMsg
@@ -224,11 +247,12 @@ viewSnippetExpanded model =
                         --, Events.onMouseDown (ViewContent datum)
                         , View.Utility.elementAttribute "id" "__RENDERED_TEXT__"
                         ]
-                        [ E.row [ E.spacing 12, E.paddingEach { left = 6, right = 0, top = 0, bottom = 0 } ]
+                        [ E.row [ E.spacing 12, E.paddingEach { left = 6, right = 6, top = 0, bottom = 0 } ]
                             [ E.column
-                                [ E.width (E.px <| appWidth_ model)
+                                [ E.width (E.px <| appWidth_ model - 40)
                                 , E.clipX
                                 , E.height (E.px (appHeight_ model - 40))
+                                , E.paddingXY 40 20
                                 , E.scrollbarY
                                 , Events.onMouseDown (ExpandContractItem snippet)
                                 , View.Utility.elementAttribute "line-height" "1.5"
