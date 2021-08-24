@@ -45,7 +45,11 @@ mainColumn model =
     in
     E.column (mainColumnStyle model)
         [ E.column [ E.spacing 12, E.width (E.px <| appWidth_ model), E.height (E.px (appHeight_ model)) ]
-            [ E.row [ E.width (E.px <| appWidth_ model) ] [ title "Snippet Manager", E.el [ E.alignRight ] (Button.expandCollapseView model.viewMode) ]
+            [ E.row [ E.width (E.px <| appWidth_ model) ]
+                [ title "Snippets"
+                , userHeading model
+                , E.el [ E.alignRight ] (Button.expandCollapseView model.viewMode)
+                ]
             , header model
             , E.column [ E.spacing 12 ]
                 [ E.column [ E.spacing 12 ]
@@ -63,6 +67,15 @@ mainColumn model =
             , footer model
             ]
         ]
+
+
+userHeading model =
+    case model.currentUser of
+        Nothing ->
+            E.none
+
+        Just user ->
+            Button.signOut user.username
 
 
 
@@ -180,8 +193,8 @@ notSignedInHeader model =
 
 signedInHeader model user =
     E.row [ E.spacing 12 ]
-        [ Button.signOut user.username
-        , Button.starSnippet
+        [ Button.starSnippet
+        , Button.new
         , Button.save
         , Button.view
         , Button.delete
@@ -259,4 +272,5 @@ mainColumnStyle model =
 
 title : String -> Element msg
 title str =
-    E.row [ E.paddingEach { top = 0, bottom = 8, left = 0, right = 0 }, E.centerX, View.Style.fgGray 0.9 ] [ E.text str ]
+    -- E.row [ E.paddingEach { top = 0, bottom = 8, left = 0, right = 0 }, E.centerX, View.Style.fgGray 0.9 ] [ E.text str ]
+    E.el [ E.paddingEach { top = 0, bottom = 0, left = 0, right = 18 }, View.Style.fgGray 0.9 ] (E.text str)

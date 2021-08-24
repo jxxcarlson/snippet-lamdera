@@ -5,7 +5,7 @@ import Browser exposing (UrlRequest(..))
 import Browser.Events
 import Browser.Navigation as Nav
 import Data
-import File.Download as Download
+import Element
 import Frontend.Cmd
 import Frontend.Update
 import Html exposing (Html)
@@ -17,7 +17,6 @@ import Time
 import Token
 import Types exposing (..)
 import Url exposing (Url)
-import Util
 import View.Large
 import View.Small
 
@@ -61,6 +60,7 @@ init url key =
       , windowWidth = 1200
       , windowHeight = 900
       , popupStatus = PopupClosed
+      , device = Element.Phone
 
       -- DATA
       , snippetText = ""

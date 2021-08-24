@@ -5,6 +5,7 @@ import Browser exposing (UrlRequest)
 import Browser.Dom as Dom
 import Browser.Navigation exposing (Key)
 import Data exposing (DataDict, DataId, Datum)
+import Element
 import Http
 import Markdown.Render
 import Random
@@ -46,6 +47,7 @@ type alias FrontendModel =
     , windowHeight : Int
     , popupStatus : PopupStatus
     , viewMode : ViewMode
+    , device : Element.DeviceClass
     }
 
 
