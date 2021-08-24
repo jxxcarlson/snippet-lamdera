@@ -252,7 +252,8 @@ viewSnippetExpanded model =
                                 , E.clipX
                                 , E.height (E.px (appHeight_ model - 40))
                                 , E.paddingEach { left = 12, right = 8, top = 0, bottom = 0 }
-                                , E.scrollbarY
+
+                                -- , E.scrollbarY
                                 , Events.onMouseDown (ExpandContractItem snippet)
                                 , View.Utility.elementAttribute "line-height" "1.5"
                                 ]
@@ -266,50 +267,6 @@ viewSnippetExpanded model =
                         ]
                     ]
                 ]
-
-
-viewSnippet2 : Model -> Datum -> Element FrontendMsg
-viewSnippet2 model datum =
-    let
-        predicate =
-            Just datum.id == Maybe.map .id model.currentSnippet && model.snippetViewMode == SnippetExpanded
-
-        h =
-            if predicate then
-                300
-
-            else
-                60
-
-        scroll =
-            if predicate then
-                E.scrollbarY
-
-            else
-                E.clipY
-    in
-    E.row
-        [ Font.size 14
-        , E.spacing 12
-        , E.paddingEach { top = 10, left = 10, right = 10, bottom = 0 }
-        , E.width (E.px <| appWidth_ model)
-        , Background.color Color.veryPaleBlue
-        ]
-        [ View.Utility.cssNode "markdown.css"
-        , E.column [ E.alignTop, E.spacing 8 ] [ E.el [] (Button.editItem datum), Button.expandCollapse datum ]
-        , E.column
-            [ E.width (E.px <| appWidth_ model)
-            , E.height (E.px h)
-            , scroll
-            , E.alignTop
-            , E.moveUp 16
-            , View.Utility.elementAttribute "line-height" "1.5"
-            ]
-            [ Markdown.Render.toHtml Markdown.Option.ExtendedMath datum.content
-                |> Html.map MarkdownMsg
-                |> E.html
-            ]
-        ]
 
 
 footer model =
