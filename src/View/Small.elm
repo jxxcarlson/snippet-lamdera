@@ -211,7 +211,6 @@ viewSnippet model currentSnippetId datum =
                 , E.clipX
                 , E.height (E.px 36)
                 , E.moveUp 3
-                , E.scrollbarY
                 , View.Utility.elementAttribute "line-height" "1.5"
                 ]
                 [ View.Utility.cssNode "markdown.css"
