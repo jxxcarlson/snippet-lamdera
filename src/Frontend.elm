@@ -340,8 +340,6 @@ update msg model =
             , Cmd.none
             )
 
-        MarkdownMsg _ ->
-            ( model, Cmd.none )
 
         ExportYaml ->
             ( model, Frontend.Update.exportSnippets model )

@@ -7,8 +7,7 @@ import Element.Border as Border
 import Element.Events as Events
 import Element.Font as Font
 import Html exposing (Html)
-import Markdown.Option
-import Markdown.Render
+import Markdown
 import Types exposing (..)
 import View.Button as Button
 import View.Color as Color
@@ -94,8 +93,7 @@ rhs model =
                                 , Font.size 14
                                 , View.Utility.elementAttribute "line-height" "1.5"
                                 ]
-                                [ Markdown.Render.toHtml Markdown.Option.ExtendedMath snippet.content
-                                    |> Html.map MarkdownMsg
+                                [ Markdown.toHtml [] snippet.content
                                     |> E.html
                                 ]
                             ]
@@ -181,8 +179,7 @@ viewSnippet model currentSnippetId datum =
                 ]
                 [ View.Utility.cssNode "markdown.css"
                 , View.Utility.katexCSS
-                , Markdown.Render.toHtml Markdown.Option.ExtendedMath datum.content
-                    |> Html.map MarkdownMsg
+                , Markdown.toHtml [] datum.content
                     |> E.html
                 ]
             ]

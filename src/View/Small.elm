@@ -7,8 +7,7 @@ import Element.Border as Border
 import Element.Events as Events
 import Element.Font as Font
 import Html exposing (Html)
-import Markdown.Option
-import Markdown.Render
+import Markdown
 import Time
 import Types exposing (..)
 import View.Button as Button
@@ -169,8 +168,63 @@ viewSnippets model filteredSnippets =
         (List.map (viewSnippet model currentSnippetId) filteredSnippets)
 
 
+
 viewSnippet : Model -> String -> Datum -> Element FrontendMsg
 viewSnippet model currentSnippetId datum =
+    let
+        borderWidth =
+            if datum.id == currentSnippetId then
+                Border.widthEach { bottom = 2, top = 2, left = 2, right = 2 }
+
+            else
+                Border.widthEach { bottom = 2, top = 0, left = 0, right = 0 }
+
+        bg =
+            if datum.id == currentSnippetId then
+                Background.color Color.palePink
+
+            else
+                Background.color Color.white
+
+        borderColor =
+            if datum.id == currentSnippetId then
+                Border.color Color.darkRed
+
+            else
+                Border.color Color.darkBlue
+    in
+    E.row
+        [ Font.size 14
+        , borderWidth
+        , borderColor
+        , E.height (E.px 36)
+        , E.width (E.px <| appWidth_ model )
+        , Events.onMouseDown (ViewContent datum)
+        , bg
+        , View.Utility.elementAttribute "id" "__RENDERED_TEXT__"
+        ]
+        [ E.row [ E.spacing 12, E.paddingEach { left = 6, right = 0, top = 0, bottom = 0 } ]
+            [ E.el [] (Button.editItem datum)
+            , E.column
+                [ E.width (E.px <| appWidth_ model - 90)
+                , E.clipY
+                , E.clipX
+                , E.height (E.px 36)
+                , E.moveUp 3
+                , E.scrollbarY
+                , View.Utility.elementAttribute "line-height" "1.5"
+                ]
+                [ View.Utility.cssNode "markdown.css"
+                , View.Utility.katexCSS
+                , Markdown.toHtml [] datum.content
+                    |> E.html
+                ]
+            ]
+        ]
+
+
+viewSnippet2 : Model -> String -> Datum -> Element FrontendMsg
+viewSnippet2 model currentSnippetId datum =
     let
         borderWidth =
             if datum.id == currentSnippetId then
@@ -204,8 +258,8 @@ viewSnippet model currentSnippetId datum =
         , View.Utility.elementAttribute "id" "__RENDERED_TEXT__"
         ]
         [ E.row [ E.spacing 12, E.paddingEach { left = 6, right = 0, top = 0, bottom = 0 } ]
-            [ E.el [] (Button.editItem datum)
-            , E.column
+            [ --E.el [] (Button.editItem datum)
+             E.column
                 [ E.width (E.px <| appWidth_ model)
                 , E.clipY
                 , E.clipX
@@ -215,8 +269,7 @@ viewSnippet model currentSnippetId datum =
                 ]
                 [ View.Utility.cssNode "markdown.css"
                 , View.Utility.katexCSS
-                , Markdown.Render.toHtml Markdown.Option.ExtendedMath datum.content
-                    |> Html.map MarkdownMsg
+                , Markdown.toHtml [] datum.content
                     |> E.html
                 ]
             ]
@@ -250,7 +303,7 @@ viewSnippetExpanded model =
                             [ E.column
                                 [ E.width (E.px <| appWidth_ model - 40)
                                 , E.clipX
-                                , E.height (E.px (appHeight_ model - 40))
+                                , E.height (E.px (appHeight_ model - 20))
                                 , E.paddingEach { left = 12, right = 8, top = 0, bottom = 0 }
 
                                 -- , E.scrollbarY
@@ -259,8 +312,7 @@ viewSnippetExpanded model =
                                 ]
                                 [ View.Utility.cssNode "markdown.css"
                                 , View.Utility.katexCSS
-                                , Markdown.Render.toHtml Markdown.Option.ExtendedMath snippet.content
-                                    |> Html.map MarkdownMsg
+                                , Markdown.toHtml [] snippet.content
                                     |> E.html
                                 ]
                             ]

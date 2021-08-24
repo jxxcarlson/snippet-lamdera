@@ -7,7 +7,7 @@ import Browser.Navigation exposing (Key)
 import Data exposing (DataDict, DataId, Datum)
 import Element
 import Http
-import Markdown.Render
+import Markdown
 import Random
 import Time
 import Url exposing (Url)
@@ -131,7 +131,6 @@ type FrontendMsg
     | ModificationOrder
     | AlphabeticOrder
     | RandomizedOrder (List Datum)
-    | MarkdownMsg Markdown.Render.MarkdownMsg
     | ExportYaml
       -- UI
     | ExpandContractView
