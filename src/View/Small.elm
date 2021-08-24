@@ -3,6 +3,8 @@ module View.Small exposing (view)
 import Data exposing (Datum)
 import Element as E exposing (Element)
 import Element.Background as Background
+import Element.Border as Border
+import Element.Events as Events
 import Element.Font as Font
 import Html exposing (Html)
 import Markdown.Option
@@ -25,11 +27,65 @@ view : Model -> Html FrontendMsg
 view model =
     E.layoutWith { options = [ E.focusStyle View.Utility.noFocus ] }
         [ View.Style.bgGray 0.2, E.clipX, E.clipY ]
-        (mainColumn model)
+        (mainView model)
 
 
-mainColumn : Model -> Element FrontendMsg
-mainColumn model =
+mainView model =
+    case model.appMode of
+        ViewMode ->
+            case model.snippetViewMode of
+                SnippetExpanded ->
+                    viewSnippetExpanded model
+
+                SnippetCollapsed ->
+                    listView model
+
+        _ ->
+            itemview model
+
+
+listView : Model -> Element FrontendMsg
+listView model =
+    let
+        filteredSnippets =
+            Data.filter (String.trim model.inputSnippetFilter) model.snippets
+
+        numberOfSnippets =
+            String.fromInt (List.length model.snippets)
+
+        numberOfFilteredSnippets =
+            String.fromInt (List.length filteredSnippets)
+
+        ratio =
+            numberOfFilteredSnippets ++ "/" ++ numberOfSnippets
+    in
+    E.column (mainColumnStyle model)
+        [ E.column [ E.spacing 12, E.width (E.px <| appWidth_ model), E.height (E.px (appHeight_ model - 240)) ]
+            [ E.row [ E.width (E.px <| appWidth_ model) ]
+                [ title "Snippets"
+                , userHeading model
+                , E.el [ E.alignRight ] (Button.expandCollapseView model.viewMode)
+                ]
+            , E.column [ E.spacing 12 ]
+                [ E.column [ E.spacing 12 ]
+                    [ E.row [ E.spacing 8, E.width (E.px (appWidth_ model)) ]
+                        [ View.Input.snippetFilter model (appWidth_ model - 210)
+                        , Button.searchByStarred
+                        , Button.sortByModificationDate model.sortMode
+                        , Button.randomize model.sortMode
+                        , E.el [ Font.color Color.white, Font.size 14, E.alignRight ] (E.text ratio)
+                        ]
+                    , viewSnippets model filteredSnippets
+                    ]
+                ]
+
+            -- , footer model
+            ]
+        ]
+
+
+itemview : Model -> Element FrontendMsg
+itemview model =
     let
         filteredSnippets =
             Data.filter (String.trim model.inputSnippetFilter) model.snippets
@@ -69,34 +125,128 @@ mainColumn model =
         ]
 
 
-userHeading model =
-    case model.currentUser of
-        Nothing ->
-            E.none
-
-        Just user ->
-            Button.signOut user.username
-
-
 
 -- (List.map (viewSnippet model)
 
 
 viewSnippets : Model -> List Datum -> Element FrontendMsg
 viewSnippets model filteredSnippets =
+    let
+        currentSnippetId =
+            Maybe.map .id model.currentSnippet |> Maybe.withDefault "---"
+    in
     E.column
         [ E.spacing 12
         , E.paddingXY 0 0
         , E.scrollbarY
         , E.width (E.px <| appWidth_ model)
-        , E.height (E.px (appHeight_ model - 270))
+        , E.height (E.px (appHeight_ model - 40))
         , Background.color Color.blueGray
         ]
-        (List.map (viewSnippet model) filteredSnippets)
+        (List.map (viewSnippet model currentSnippetId) filteredSnippets)
 
 
-viewSnippet : Model -> Datum -> Element FrontendMsg
-viewSnippet model datum =
+viewSnippet : Model -> String -> Datum -> Element FrontendMsg
+viewSnippet model currentSnippetId datum =
+    let
+        borderWidth =
+            if datum.id == currentSnippetId then
+                Border.widthEach { bottom = 2, top = 2, left = 2, right = 2 }
+
+            else
+                Border.widthEach { bottom = 2, top = 0, left = 0, right = 0 }
+
+        bg =
+            if datum.id == currentSnippetId then
+                Background.color Color.palePink
+
+            else
+                Background.color Color.white
+
+        borderColor =
+            if datum.id == currentSnippetId then
+                Border.color Color.darkRed
+
+            else
+                Border.color Color.darkBlue
+    in
+    E.row
+        [ Font.size 14
+        , borderWidth
+        , borderColor
+        , E.height (E.px 36)
+        , E.width (E.px <| appWidth_ model)
+        , Events.onMouseDown (ViewContent datum)
+        , bg
+        , View.Utility.elementAttribute "id" "__RENDERED_TEXT__"
+        ]
+        [ E.row [ E.spacing 12, E.paddingEach { left = 6, right = 0, top = 0, bottom = 0 } ]
+            [ E.el [] (Button.editItem datum)
+            , E.column
+                [ E.width (E.px <| appWidth_ model)
+                , E.clipY
+                , E.clipX
+                , E.height (E.px 36)
+                , E.moveUp 3
+                , E.scrollbarY
+                , View.Utility.elementAttribute "line-height" "1.5"
+                ]
+                [ View.Utility.cssNode "markdown.css"
+                , View.Utility.katexCSS
+                , Markdown.Render.toHtml Markdown.Option.ExtendedMath datum.content
+                    |> Html.map MarkdownMsg
+                    |> E.html
+                ]
+            ]
+        ]
+
+
+viewSnippetExpanded : Model -> Element FrontendMsg
+viewSnippetExpanded model =
+    case model.currentSnippet of
+        Nothing ->
+            E.none
+
+        Just snippet ->
+            E.column (mainColumnStyle model)
+                [ E.column
+                    [ E.spacing 12
+                    , E.paddingXY 0 0
+                    , E.width (E.px <| appWidth_ model)
+                    , E.height E.fill
+                    , Background.color Color.whiteg
+                    ]
+                    [ E.column
+                        [ Font.size 14
+                        , E.height (E.px 36)
+                        , E.width (E.px <| appWidth_ model)
+
+                        --, Events.onMouseDown (ViewContent datum)
+                        , View.Utility.elementAttribute "id" "__RENDERED_TEXT__"
+                        ]
+                        [ E.row [ E.spacing 12, E.paddingEach { left = 6, right = 0, top = 0, bottom = 0 } ]
+                            [ E.column
+                                [ E.width (E.px <| appWidth_ model)
+                                , E.clipX
+                                , E.height (E.px (appHeight_ model - 40))
+                                , E.scrollbarY
+                                , Events.onMouseDown (ExpandContractItem snippet)
+                                , View.Utility.elementAttribute "line-height" "1.5"
+                                ]
+                                [ View.Utility.cssNode "markdown.css"
+                                , View.Utility.katexCSS
+                                , Markdown.Render.toHtml Markdown.Option.ExtendedMath snippet.content
+                                    |> Html.map MarkdownMsg
+                                    |> E.html
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+
+
+viewSnippet2 : Model -> Datum -> Element FrontendMsg
+viewSnippet2 model datum =
     let
         predicate =
             Just datum.id == Maybe.map .id model.currentSnippet && model.snippetViewMode == SnippetExpanded
@@ -165,8 +315,20 @@ messageRow model =
         [ E.text model.message ]
 
 
-footerButtons model =
-    E.row [ E.width (E.px (panelWidth_ model)), E.spacing 12 ] []
+userHeading model =
+    case model.currentUser of
+        Nothing ->
+            E.row
+                [ E.spacing 12
+                , Font.size 14
+                ]
+                [ Button.signIn
+                , View.Input.usernameInput model
+                , View.Input.passwordInput model
+                ]
+
+        Just user ->
+            Button.signOut user.username
 
 
 header model =
@@ -241,7 +403,7 @@ searchDocPaneHeight =
 
 
 panelWidth_ model =
-    min 600 ((model.windowWidth - 100 - docListWidth) // 2)
+    min 600 (model.windowWidth - 100 - docListWidth)
 
 
 docListWidth =
@@ -249,15 +411,15 @@ docListWidth =
 
 
 appHeight_ model =
-    model.windowHeight - 100
+    model.windowHeight - 20
 
 
 panelHeight_ model =
-    appHeight_ model - 110
+    appHeight_ model - 20
 
 
 appWidth_ model =
-    min 550 model.windowWidth
+    min 500 model.windowWidth
 
 
 mainColumnStyle model =

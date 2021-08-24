@@ -321,7 +321,7 @@ update msg model =
             )
 
         ViewContent datum ->
-            ( { model | currentSnippet = Just datum, appMode = ViewMode }, Cmd.none )
+            ( { model | currentSnippet = Just datum, appMode = ViewMode, snippetViewMode = SnippetExpanded }, Cmd.none )
 
         ExpandContractItem datum ->
             let
