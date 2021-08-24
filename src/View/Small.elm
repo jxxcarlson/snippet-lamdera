@@ -83,7 +83,7 @@ listView model =
             numberOfFilteredSnippets ++ "/" ++ numberOfSnippets
     in
     E.column (mainColumnStyle model)
-        [ E.column [ E.spacing 12, E.width (E.px <| appWidth_ model), E.height (E.px (appHeight_ model - 240)) ]
+        [ E.column [ E.spacing 12, E.width (E.px <| appWidth_ model), E.height (E.px (appHeight_ model - 45)), E.clipX, E.clipY ]
             [ E.row [ E.width (E.px <| appWidth_ model) ]
                 [ title "Snippets"
                 , userHeading model
@@ -163,7 +163,7 @@ viewSnippets model filteredSnippets =
         , E.paddingXY 0 0
         , E.scrollbarY
         , E.width (E.px <| appWidth_ model)
-        , E.height (E.px (appHeight_ model - 40))
+        , E.height (E.px (appHeight_ model - 140))
         , Background.color Color.blueGray
         ]
         (List.map (viewSnippet model currentSnippetId) filteredSnippets)
@@ -251,7 +251,7 @@ viewSnippetExpanded model =
                                 [ E.width (E.px <| appWidth_ model - 40)
                                 , E.clipX
                                 , E.height (E.px (appHeight_ model - 40))
-                                , E.paddingXY 40 20
+                                , E.paddingEach { left = 12, right = 8, top = 0, bottom = 0 }
                                 , E.scrollbarY
                                 , Events.onMouseDown (ExpandContractItem snippet)
                                 , View.Utility.elementAttribute "line-height" "1.5"
