@@ -162,7 +162,7 @@ viewSnippets model filteredSnippets =
         , E.paddingXY 0 0
         , E.scrollbarY
         , E.width (E.px <| appWidth_ model)
-        , E.height (E.px (appHeight_ model - 140))
+        , E.height (E.px (appHeight_ model - 170))
         , Background.color Color.blueGray
         ]
         (List.map (viewSnippet model currentSnippetId) filteredSnippets)
@@ -222,58 +222,6 @@ viewSnippet model currentSnippetId datum =
             ]
         ]
 
-
-viewSnippet2 : Model -> String -> Datum -> Element FrontendMsg
-viewSnippet2 model currentSnippetId datum =
-    let
-        borderWidth =
-            if datum.id == currentSnippetId then
-                Border.widthEach { bottom = 2, top = 2, left = 2, right = 2 }
-
-            else
-                Border.widthEach { bottom = 2, top = 0, left = 0, right = 0 }
-
-        bg =
-            if datum.id == currentSnippetId then
-                Background.color Color.palePink
-
-            else
-                Background.color Color.white
-
-        borderColor =
-            if datum.id == currentSnippetId then
-                Border.color Color.darkRed
-
-            else
-                Border.color Color.darkBlue
-    in
-    E.row
-        [ Font.size 14
-        , borderWidth
-        , borderColor
-        , E.height (E.px 36)
-        , E.width (E.px <| appWidth_ model)
-        , Events.onMouseDown (ViewContent datum)
-        , bg
-        , View.Utility.elementAttribute "id" "__RENDERED_TEXT__"
-        ]
-        [ E.row [ E.spacing 12, E.paddingEach { left = 6, right = 0, top = 0, bottom = 0 } ]
-            [ --E.el [] (Button.editItem datum)
-             E.column
-                [ E.width (E.px <| appWidth_ model)
-                , E.clipY
-                , E.clipX
-                , E.height (E.px 36)
-                , E.moveUp 3
-                , View.Utility.elementAttribute "line-height" "1.5"
-                ]
-                [ View.Utility.cssNode "markdown.css"
-                , View.Utility.katexCSS
-                , Markdown.toHtml [] datum.content
-                    |> E.html
-                ]
-            ]
-        ]
 
 
 viewSnippetExpanded : Model -> Element FrontendMsg
