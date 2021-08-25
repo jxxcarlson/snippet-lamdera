@@ -162,7 +162,7 @@ viewSnippets model filteredSnippets =
         , E.paddingXY 0 0
         , E.scrollbarY
         , E.width (E.px <| appWidth_ model)
-        , E.height (E.px (appHeight_ model - 170))
+        , E.height (E.px (appHeight_ model - 200))
         , Background.color Color.blueGray
         ]
         (List.map (viewSnippet model currentSnippetId) filteredSnippets)
