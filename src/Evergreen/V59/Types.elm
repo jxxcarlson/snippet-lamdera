@@ -8,7 +8,7 @@ import Evergreen.V59.Authentication
 import Evergreen.V59.Data
 import Evergreen.V59.User
 import Http
-import Markdown.Render
+import Markdown
 import Random
 import Time
 import Url
@@ -110,7 +110,6 @@ type FrontendMsg
     | ModificationOrder
     | AlphabeticOrder
     | RandomizedOrder (List Evergreen.V59.Data.Datum)
-    | MarkdownMsg Markdown.Render.MarkdownMsg
     | ExportYaml
     | ExpandContractView
     | AdminRunTask
