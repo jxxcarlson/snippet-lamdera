@@ -1,4 +1,4 @@
-module Yaml exposing (..)
+module Yaml exposing (decodeData, encodeData)
 
 -- for decoders
 
@@ -20,8 +20,8 @@ datumDecoder =
      (Decode.field "username" Decode.string)
      (Decode.field "content" Decode.string)
      (Decode.field "tags" (Decode.list Decode.string))
-     (Decode.field "creationData" (Decode.int |> Decode.map Time.millisToPosix))
-     (Decode.field "modificationData" (Decode.int |> Decode.map Time.millisToPosix))
+     (Decode.field "creationDate" (Decode.int |> Decode.map Time.millisToPosix))
+     (Decode.field "modificationDate" (Decode.int |> Decode.map Time.millisToPosix))
 
 
 
@@ -45,8 +45,8 @@ datumEncoder datum =
         , ( "username", Encode.string datum.username )
         , ( "content", Encode.string datum.content )
         , ( "tags", Encode.list Encode.string datum.tags )
-        , ( "creationDate", Encode.int (Time.posixToMillis datum.creationData) )
-        , ( "modificationDate", Encode.int (Time.posixToMillis datum.creationData) )
+        , ( "creationDate", Encode.int (Time.posixToMillis datum.creationDate) )
+        , ( "modificationDate", Encode.int (Time.posixToMillis datum.creationDate) )
         ]
 
 
@@ -56,6 +56,6 @@ testDatum =
     , username = "Jim"
     , content = "Gotta get started."
     , tags = [ "aa", "bb" ]
-    , creationData = Time.millisToPosix 0
-    , modificationData = Time.millisToPosix 1
+    , creationDate = Time.millisToPosix 0
+    , modificationDate = Time.millisToPosix 1
     }

@@ -197,6 +197,7 @@ footer model =
         ]
         [ Button.adminPopup model
         , Button.exportYaml
+        , Button.importYaml
         , messageRow model
         ]
 

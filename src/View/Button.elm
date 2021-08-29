@@ -9,6 +9,7 @@ module View.Button exposing
     , fetch
     , getUsers
     , help
+    , importYaml
     , linkTemplate
     , new
     , randomize
@@ -149,7 +150,12 @@ delete =
 
 exportYaml : Element FrontendMsg
 exportYaml =
-    buttonTemplate [] ExportYaml "Export"
+    buttonTemplate [] ExportJson "Export"
+
+
+importYaml : Element FrontendMsg
+importYaml =
+    buttonTemplate [] JsonRequested "Import"
 
 
 editItem datum =
