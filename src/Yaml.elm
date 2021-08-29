@@ -4,9 +4,28 @@ module Yaml exposing (..)
 
 import Data exposing (Datum)
 import Time
-import Yaml.Decode
+import Yaml.Decode as Decode exposing(Decoder)
 import Yaml.Encode as Encode exposing (Encoder)
 
+
+decodeData : String -> Result Decode.Error (List Datum)
+decodeData str =
+    Decode.fromString (Decode.list datumDecoder) str
+
+datumDecoder : Decoder Datum
+datumDecoder =
+   Decode.map7 Datum
+     (Decode.field "id" Decode.string)
+     (Decode.field "title" Decode.string)
+     (Decode.field "username" Decode.string)
+     (Decode.field "content" Decode.string)
+     (Decode.field "tags" (Decode.list Decode.string))
+     (Decode.field "creationData" (Decode.int |> Decode.map Time.millisToPosix))
+     (Decode.field "modificationData" (Decode.int |> Decode.map Time.millisToPosix))
+
+
+
+-- ENCODE
 
 encodeData : List Datum -> String
 encodeData data =
