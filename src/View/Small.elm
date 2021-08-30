@@ -168,7 +168,6 @@ viewSnippets model filteredSnippets =
         (List.map (viewSnippet model currentSnippetId) filteredSnippets)
 
 
-
 viewSnippet : Model -> String -> Datum -> Element FrontendMsg
 viewSnippet model currentSnippetId datum =
     let
@@ -198,7 +197,7 @@ viewSnippet model currentSnippetId datum =
         , borderWidth
         , borderColor
         , E.height (E.px 36)
-        , E.width (E.px <| appWidth_ model )
+        , E.width (E.px <| appWidth_ model)
         , Events.onMouseDown (ViewContent datum)
         , bg
         , View.Utility.elementAttribute "id" "__RENDERED_TEXT__"
@@ -259,7 +258,7 @@ viewSnippet2 model currentSnippetId datum =
         ]
         [ E.row [ E.spacing 12, E.paddingEach { left = 6, right = 0, top = 0, bottom = 0 } ]
             [ --E.el [] (Button.editItem datum)
-             E.column
+              E.column
                 [ E.width (E.px <| appWidth_ model)
                 , E.clipY
                 , E.clipX
@@ -331,7 +330,7 @@ footer model =
         , E.inFront (View.Popup.admin model)
         ]
         [ Button.adminPopup model
-        , Button.exportYaml
+        , Button.exportJson
         , messageRow model
         ]
 

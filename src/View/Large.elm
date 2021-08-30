@@ -196,8 +196,8 @@ footer model =
         , E.inFront (View.Popup.admin model)
         ]
         [ Button.adminPopup model
-        , Button.exportYaml
-        , Button.importYaml
+        , Button.exportJson
+        , Button.importJson
         , messageRow model
         ]
 
