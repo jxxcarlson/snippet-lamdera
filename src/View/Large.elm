@@ -28,7 +28,7 @@ expandedViewSettings =
 
 
 indexViewSettings =
-    { width = 500, titleStatus = NoTitleOrTableOfContents }
+    { width = 500, titleStatus = HideTitle }
 
 
 view : Model -> Html FrontendMsg
