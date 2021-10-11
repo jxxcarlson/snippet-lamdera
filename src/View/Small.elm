@@ -24,11 +24,11 @@ type alias Model =
 
 
 expandedViewSettings =
-    { width = 500, titleStatus = TitleWithSize 26 }
+    { width = 500, titleSize = 26, showTOC = True }
 
 
 indexViewSettings =
-    { width = 500, titleStatus = HideTitle }
+    { width = 500, titleSize = 18, showTOC = False }
 
 
 view : Model -> Html FrontendMsg
