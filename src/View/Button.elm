@@ -5,10 +5,11 @@ module View.Button exposing
     , editItem2
     , expandCollapse
     , expandCollapseView
-    , exportYaml
+    , exportJson
     , fetch
     , getUsers
     , help
+    , importJson
     , linkTemplate
     , new
     , randomize
@@ -147,9 +148,14 @@ delete =
     buttonTemplate [] Delete "Delete"
 
 
-exportYaml : Element FrontendMsg
-exportYaml =
-    buttonTemplate [] ExportYaml "Export"
+exportJson : Element FrontendMsg
+exportJson =
+    buttonTemplate [] ExportJson "Export"
+
+
+importJson : Element FrontendMsg
+importJson =
+    buttonTemplate [] JsonRequested "Import"
 
 
 editItem datum =

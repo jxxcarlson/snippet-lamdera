@@ -38,8 +38,8 @@ type alias Datum =
     , username : Username
     , content : String
     , tags : List String
-    , creationData : Time.Posix
-    , modificationData : Time.Posix
+    , creationDate : Time.Posix
+    , modificationDate : Time.Posix
     }
 
 
@@ -50,8 +50,8 @@ system currentTime id title content =
     , username = "system"
     , content = fixUrls content
     , tags = []
-    , creationData = currentTime
-    , modificationData = currentTime
+    , creationDate = currentTime
+    , modificationDate = currentTime
     }
 
 
@@ -160,16 +160,16 @@ make username currentTime id content =
     , username = username
     , content = fixUrls content
     , tags = []
-    , creationData = currentTime
-    , modificationData = currentTime
+    , creationDate = currentTime
+    , modificationDate = currentTime
     }
 
 
 type alias DataFile =
     { data : List Datum
     , username : Username
-    , creationData : Time.Posix
-    , modificationData : Time.Posix
+    , creationDate : Time.Posix
+    , modificationDate : Time.Posix
     }
 
 
@@ -177,8 +177,8 @@ type alias DataDict =
     Dict Username DataFile
 
 
-transformer { title, content, creationData } =
-    { targetContent = title ++ String.replace "!!" "wow!" content, targetDate = creationData }
+transformer { title, content, creationDate } =
+    { targetContent = title ++ String.replace "!!" "wow!" content, targetDate = creationDate }
 
 
 filter : String -> List Datum -> List Datum
@@ -201,8 +201,8 @@ setupUser currentTime username dataDict =
         newDataFile =
             { data = []
             , username = username
-            , creationData = currentTime
-            , modificationData = currentTime
+            , creationDate = currentTime
+            , modificationDate = currentTime
             }
     in
     Dict.insert username newDataFile dataDict

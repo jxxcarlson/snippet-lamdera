@@ -6,6 +6,7 @@ import Browser.Dom as Dom
 import Browser.Navigation exposing (Key)
 import Data exposing (DataDict, DataId, Datum)
 import Element
+import File exposing (File)
 import Http
 import Random
 import Time
@@ -130,7 +131,10 @@ type FrontendMsg
     | ModificationOrder
     | AlphabeticOrder
     | RandomizedOrder (List Datum)
-    | ExportYaml
+    | ExportJson
+    | JsonRequested
+    | JsonSelected File
+    | JsonLoaded String
       -- UI
     | ExpandContractView
       -- ADMIN

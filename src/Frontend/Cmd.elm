@@ -1,9 +1,16 @@
-module Frontend.Cmd exposing (getRandomNumberFE, setupWindow)
+module Frontend.Cmd exposing (exportJson, getRandomNumberFE, setupWindow)
 
 import Browser.Dom as Dom
+import Codec
+import File.Download as Download
 import Http
 import Task
 import Types exposing (FrontendModel, FrontendMsg(..), ToBackend(..))
+
+
+exportJson : FrontendModel -> Cmd msg
+exportJson model =
+    Download.string "snippets.json" "text/json" (Codec.encodeData model.snippets)
 
 
 setupWindow : Cmd FrontendMsg

@@ -4,8 +4,11 @@ import Authentication
 import Browser exposing (UrlRequest(..))
 import Browser.Events
 import Browser.Navigation as Nav
+import Codec
 import Data
 import Element
+import File exposing (File)
+import File.Select as Select
 import Frontend.Cmd
 import Frontend.Update
 import Html exposing (Html)
@@ -13,12 +16,15 @@ import Lamdera exposing (sendToBackend)
 import List.Extra
 import Random
 import Random.List
+import Task
 import Time
 import Token
 import Types exposing (..)
 import Url exposing (Url)
 import View.Large
 import View.Small
+import Yaml
+import Yaml.Decode
 
 
 type alias Model =
@@ -193,7 +199,7 @@ update msg model =
             ( { model | snippetText = newSnippetText }, Cmd.none )
 
         ModificationOrder ->
-            ( { model | sortMode = SortByDate, snippets = List.sortBy (\snip -> -(Time.posixToMillis snip.modificationData)) model.snippets }, Cmd.none )
+            ( { model | sortMode = SortByDate, snippets = List.sortBy (\snip -> -(Time.posixToMillis snip.modificationDate)) model.snippets }, Cmd.none )
 
         AlphabeticOrder ->
             ( { model | sortMode = SortAlphabetically, snippets = List.sortBy (\snip -> snip.content) model.snippets }, Cmd.none )
@@ -242,7 +248,7 @@ update msg model =
                                         newSnippet =
                                             { snippet
                                                 | content = model.snippetText |> Data.fixUrls
-                                                , modificationData = model.currentTime
+                                                , modificationDate = model.currentTime
                                                 , id = token
                                             }
 
@@ -269,7 +275,7 @@ update msg model =
                                         newSnippet =
                                             { snippet
                                                 | content = model.snippetText |> Data.fixUrls
-                                                , modificationData = model.currentTime
+                                                , modificationDate = model.currentTime
                                             }
 
                                         newSnippets =
@@ -340,9 +346,27 @@ update msg model =
             , Cmd.none
             )
 
+        JsonRequested ->
+            ( model, Select.file [ "text/json" ] JsonSelected )
 
-        ExportYaml ->
-            ( model, Frontend.Update.exportSnippets model )
+        JsonSelected file ->
+            ( model, Task.perform JsonLoaded (File.toString file) )
+
+        JsonLoaded jsonImport ->
+            case Codec.decodeData jsonImport of
+                Err _ ->
+                    ( { model | message = "Error importing snippets" }, Cmd.none )
+
+                Ok snippets ->
+                    ( { model
+                        | snippets = snippets
+                        , message = "imported: " ++ (String.fromInt <| String.length jsonImport)
+                      }
+                    , Cmd.none
+                    )
+
+        ExportJson ->
+            ( model, Frontend.Cmd.exportJson model )
 
         -- UI
         ExpandContractView ->
@@ -379,7 +403,7 @@ updateFromBackend msg model =
         GotUserData dataList ->
             let
                 snippets =
-                    List.sortBy (\snip -> -(Time.posixToMillis snip.modificationData)) dataList
+                    List.sortBy (\snip -> -(Time.posixToMillis snip.modificationDate)) dataList
 
                 currentSnippet =
                     case List.head snippets of
