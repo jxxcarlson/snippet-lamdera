@@ -7,7 +7,6 @@ import Browser.Navigation exposing (Key)
 import Data exposing (DataDict, DataId, Datum)
 import Element
 import Http
-import Markdown
 import Random
 import Time
 import Url exposing (Url)

@@ -7,8 +7,8 @@ import Element.Border as Border
 import Element.Events as Events
 import Element.Font as Font
 import Html exposing (Html)
-import Markdown
-import Time
+import Markup.API
+import Markup.Lang exposing (Lang(..))
 import Types exposing (..)
 import View.Button as Button
 import View.Color as Color
@@ -162,11 +162,10 @@ viewSnippets model filteredSnippets =
         , E.paddingXY 0 0
         , E.scrollbarY
         , E.width (E.px <| appWidth_ model)
-        , E.height (E.px (appHeight_ model - 200))
+        , E.height (E.px (appHeight_ model - 140))
         , Background.color Color.blueGray
         ]
         (List.map (viewSnippet model currentSnippetId) filteredSnippets)
-
 
 
 viewSnippet : Model -> String -> Datum -> Element FrontendMsg
@@ -198,7 +197,7 @@ viewSnippet model currentSnippetId datum =
         , borderWidth
         , borderColor
         , E.height (E.px 36)
-        , E.width (E.px <| appWidth_ model )
+        , E.width (E.px <| appWidth_ model)
         , Events.onMouseDown (ViewContent datum)
         , bg
         , View.Utility.elementAttribute "id" "__RENDERED_TEXT__"
@@ -215,12 +214,10 @@ viewSnippet model currentSnippetId datum =
                 ]
                 [ View.Utility.cssNode "markdown.css"
                 , View.Utility.katexCSS
-                , Markdown.toHtml [] datum.content
-                    |> E.html
+                , E.column [] (Markup.API.compile Markdown 0 { width = 500, titleSize = 18 } (String.lines datum.content))
                 ]
             ]
         ]
-
 
 
 viewSnippetExpanded : Model -> Element FrontendMsg
@@ -259,8 +256,7 @@ viewSnippetExpanded model =
                                 ]
                                 [ View.Utility.cssNode "markdown.css"
                                 , View.Utility.katexCSS
-                                , Markdown.toHtml [] snippet.content
-                                    |> E.html
+                                , E.column [] (Markup.API.compile Markdown 0 { width = 500, titleSize = 28 } (String.lines snippet.content))
                                 ]
                             ]
                         ]
@@ -407,7 +403,7 @@ mainColumnStyle model =
     , View.Style.bgGray 0.5
     , E.paddingXY 20 20
     , E.width (E.px (appWidth_ model + 40))
-    , E.height (E.px (appHeight_ model + 40))
+    , E.height (E.px (appHeight_ model))
     ]
 
 

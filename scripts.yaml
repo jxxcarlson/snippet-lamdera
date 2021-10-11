@@ -1,5 +1,7 @@
 scripts:
 
-  update-vendor: cp -r ../elm-search/src vendor/search/
+  update-vendor:
+    - cp -r ../elm-search/src vendor/search/
+    - cp -r /Users/jxxcarlson/dev/lamdera/bluesky/shift-reduce/src vendor/markup
 
   cloc: cloc --bycd-file --exclude-dir=Evergreen src/

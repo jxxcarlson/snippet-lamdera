@@ -7,7 +7,8 @@ import Element.Border as Border
 import Element.Events as Events
 import Element.Font as Font
 import Html exposing (Html)
-import Markdown
+import Markup.API
+import Markup.Lang exposing (Lang(..))
 import Types exposing (..)
 import View.Button as Button
 import View.Color as Color
@@ -19,6 +20,14 @@ import View.Utility
 
 type alias Model =
     FrontendModel
+
+
+expandedViewSettings =
+    { width = 500, titleSize = 26 }
+
+
+indexViewSettings =
+    { width = 500, titleSize = 18 }
 
 
 view : Model -> Html FrontendMsg
@@ -91,11 +100,10 @@ rhs model =
                                 , Background.color Color.white
                                 , E.paddingXY 12 12
                                 , Font.size 14
+                                , E.spacing 18
                                 , View.Utility.elementAttribute "line-height" "1.5"
                                 ]
-                                [ Markdown.toHtml [] snippet.content
-                                    |> E.html
-                                ]
+                                (Markup.API.renderFancy expandedViewSettings Markdown 0 (String.lines snippet.content))
                             ]
                         ]
 
@@ -179,8 +187,10 @@ viewSnippet model currentSnippetId datum =
                 ]
                 [ View.Utility.cssNode "markdown.css"
                 , View.Utility.katexCSS
-                , Markdown.toHtml [] datum.content
-                    |> E.html
+
+                --, Markdown.toHtml [] datum.content
+                --    |> E.html
+                , E.column [ E.paddingXY 0 10 ] (Markup.API.renderFancy indexViewSettings Markdown 0 (String.lines datum.content))
                 ]
             ]
         ]
