@@ -26,6 +26,7 @@ type TokenS
     | SymbolST String
     | FunctionNameST String
     | MarkedTextST String String
+    | AnnotatedTextST String String String
 
 
 stack : List (Either Token Expr) -> List (Either TokenS ExprS)
@@ -55,6 +56,9 @@ simplifyToken token =
 
         Token.MarkedText name str _ ->
             MarkedTextST name str
+
+        Token.AnnotatedText str1 str2 str3 _ ->
+            AnnotatedTextST str1 str2 str3
 
 
 blocks : List Block -> List BlockS
