@@ -10,13 +10,13 @@ import Markup.Lang exposing (Lang(..))
 import Markup.Markup as Markup
 import Markup.Simplify as Simplify
 import Render.Block
-import Render.Settings
+import Render.Settings exposing (TitleStatus(..))
 import Render.Text
 
 
 defaultSettings : Render.Settings.Settings
 defaultSettings =
-    { width = 500, titleSize = 18 }
+    { width = 500, titleStatus = TitleWithSize 30 }
 
 
 p : Lang -> String -> List Simplify.BlockS
@@ -56,7 +56,13 @@ renderFancy settings language count source =
             ASTTools.getTitle ast |> Maybe.withDefault "Untitled" |> String.replace "\n" " "
 
         docTitle =
-            E.el [ Font.size settings.titleSize ] (E.text titleString)
+            -- E.el [ Font.size settings.titleSize ] (E.text titleString)
+            case settings.titleStatus of
+                TitleWithSize titleSize ->
+                    E.el [ Font.size titleSize ] (E.text titleString)
+
+                HideTitle ->
+                    E.none
 
         toc =
             if List.length toc_ > 1 then
