@@ -266,23 +266,23 @@ viewTOCItem : Int -> Settings -> Accumulator -> ExprM -> Element msg
 viewTOCItem generation settings accumulator block =
     case block of
         ExprM "heading2" textList _ ->
-            el (tocStyle 2) (tocLink textList)
+            el (tocStyle 2 textList) (tocLink textList)
 
         ExprM "heading3" textList _ ->
-            el (tocStyle 3) (tocLink textList)
+            el (tocStyle 3 textList) (tocLink textList)
 
         ExprM "heading4" textList _ ->
-            el (tocStyle 4) (tocLink textList)
+            el (tocStyle 4 textList) (tocLink textList)
 
         ExprM "heading5" textList _ ->
-            el (tocStyle 5) (tocLink textList)
+            el (tocStyle 5 textList) (tocLink textList)
 
         _ ->
             Element.none
 
 
-tocStyle k =
-    [ Font.size 14, Font.color tocColor, leftPadding (k * tocPadding) ]
+tocStyle k textList =
+    [ Font.size 14, Font.color tocColor, leftPadding (k * tocPadding), makeId textList ]
 
 
 leftPadding k =
@@ -300,23 +300,36 @@ makeSlug str =
 
 makeId : List ExprM -> Element.Attribute msg
 makeId textList =
-    Utility.elementAttribute "id" (Render.AST2.stringValueOfList textList |> makeSlug)
+    Utility.elementAttribute "id" (Render.AST2.stringValueOfList textList |> String.trim |> makeSlug)
 
 
 heading1 g s a textList =
     simpleElement [ Font.size s.titleSize, makeId textList ] g s a textList
 
 
+verticalPadding top bottom =
+    Element.paddingEach { top = top, bottom = bottom, left = 0, right = 0 }
+
+
 heading2 g s a textList =
-    simpleElement [ Font.size 22, makeId textList ] g s a textList
+    Element.column [ Font.size 22, verticalPadding 22 11 ]
+        [ Element.link [ makeId textList ]
+            { url = internalLink "TITLE", label = Element.paragraph [] (List.map (render g s a) textList) }
+        ]
 
 
 heading3 g s a textList =
-    simpleElement [ Font.size 18, makeId textList ] g s a textList
+    Element.column [ Font.size 18, verticalPadding 18 9 ]
+        [ Element.link [ makeId textList ]
+            { url = internalLink "TITLE", label = Element.paragraph [] (List.map (render g s a) textList) }
+        ]
 
 
 heading4 g s a textList =
-    simpleElement [ Font.size 14, Font.italic, Font.bold, makeId textList ] g s a textList
+    Element.column [ Font.size 14, verticalPadding 14 7 ]
+        [ Element.link [ makeId textList ]
+            { url = internalLink "TITLE", label = Element.paragraph [] (List.map (render g s a) textList) }
+        ]
 
 
 strong g s a textList =
