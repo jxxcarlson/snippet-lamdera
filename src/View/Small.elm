@@ -9,6 +9,7 @@ import Element.Font as Font
 import Html exposing (Html)
 import Markup.API
 import Markup.Lang exposing (Lang(..))
+import Render.Settings exposing (TitleStatus(..))
 import Types exposing (..)
 import View.Button as Button
 import View.Color as Color
@@ -20,6 +21,14 @@ import View.Utility
 
 type alias Model =
     FrontendModel
+
+
+expandedViewSettings =
+    { width = 500, titleStatus = TitleWithSize 26 }
+
+
+indexViewSettings =
+    { width = 500, titleStatus = NoTitleOrTableOfContents }
 
 
 view : Model -> Html FrontendMsg
@@ -215,7 +224,7 @@ viewSnippet model currentSnippetId datum =
                 ]
                 [ View.Utility.cssNode "markdown.css"
                 , View.Utility.katexCSS
-                , E.column [] (Markup.API.compile Markdown 0 { width = 500, titleSize = 18 } (String.lines datum.content))
+                , E.column [] (Markup.API.compile Markdown 0 indexViewSettings (String.lines datum.content))
                 ]
             ]
         ]
@@ -267,7 +276,7 @@ viewSnippet2 model currentSnippetId datum =
                 ]
                 [ View.Utility.cssNode "markdown.css"
                 , View.Utility.katexCSS
-                , E.column [] (Markup.API.compile Markdown 0 { width = 500, titleSize = 18 } (String.lines datum.content))
+                , E.column [] (Markup.API.compile Markdown 0 indexViewSettings (String.lines datum.content))
                 ]
             ]
         ]
@@ -309,7 +318,7 @@ viewSnippetExpanded model =
                                 ]
                                 [ View.Utility.cssNode "markdown.css"
                                 , View.Utility.katexCSS
-                                , E.column [] (Markup.API.compile Markdown 0 { width = 500, titleSize = 28 } (String.lines snippet.content))
+                                , E.column [] (Markup.API.compile Markdown 0 expandedViewSettings (String.lines snippet.content))
                                 ]
                             ]
                         ]

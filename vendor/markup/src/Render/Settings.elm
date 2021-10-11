@@ -7,4 +7,4 @@ type alias Settings =
 
 type TitleStatus
     = TitleWithSize Int
-    | HideTitle
+    | NoTitleOrTableOfContents

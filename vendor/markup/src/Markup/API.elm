@@ -61,7 +61,7 @@ renderFancy settings language count source =
                 TitleWithSize titleSize ->
                     E.el [ Font.size titleSize ] (E.text titleString)
 
-                HideTitle ->
+                NoTitleOrTableOfContents ->
                     E.none
 
         toc =
@@ -75,7 +75,12 @@ renderFancy settings language count source =
         renderedText_ =
             render count settings parseData.accumulator ast
     in
-    docTitle :: toc :: renderedText_
+    case settings.titleStatus of
+        NoTitleOrTableOfContents ->
+            renderedText_
+
+        TitleWithSize _ ->
+            docTitle :: toc :: renderedText_
 
 
 tableOfContents : Int -> Settings -> Block.State.Accumulator -> List Block -> List (Element msg)

@@ -308,7 +308,7 @@ heading1 g s a textList =
         TitleWithSize titleSize ->
             simpleElement [ Font.size titleSize, makeId textList ] g s a textList
 
-        HideTitle ->
+        NoTitleOrTableOfContents ->
             Element.none
 
 
