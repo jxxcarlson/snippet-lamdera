@@ -9,7 +9,7 @@ import Element.Font as Font
 import Html exposing (Html)
 import Markup.API
 import Markup.Lang exposing (Lang(..))
-import Render.Settings exposing (TitleStatus(..))
+import Render.Settings
 import Types exposing (..)
 import View.Button as Button
 import View.Color as Color
