@@ -108,6 +108,7 @@ type FrontendMsg
       -- UI
     | GotNewWindowDimensions Int Int
     | ChangePopupStatus PopupStatus
+    | SetViewPortForElement (Result Dom.Error ( Dom.Element, Dom.Viewport ))
       -- USER
     | SignIn
     | SignOut

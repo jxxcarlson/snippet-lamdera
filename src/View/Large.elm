@@ -104,7 +104,7 @@ rhs model =
                                 , E.spacing 18
                                 , View.Utility.elementAttribute "line-height" "1.5"
                                 ]
-                                (Markup.API.renderFancy expandedViewSettings Markdown 0 (String.lines snippet.content))
+                                (View.Utility.katexCSS :: Markup.API.renderFancy expandedViewSettings Markdown 0 (String.lines snippet.content))
                             ]
                         ]
 

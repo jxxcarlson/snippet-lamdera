@@ -3,6 +3,7 @@ module View.Utility exposing
     , elementAttribute
     , katexCSS
     , noFocus
+    , setViewPortForSelectedLine
     , showIf
     , showIfIsAdmin
     )
@@ -55,3 +56,38 @@ cssNode fileName =
 elementAttribute : String -> String -> Element.Attribute msg
 elementAttribute key value =
     Element.htmlAttribute (HA.attribute key value)
+
+
+
+--- XXX ---
+
+
+hideIf : Bool -> Element msg -> Element msg
+hideIf condition element =
+    if condition then
+        Element.none
+
+    else
+        element
+
+
+setViewportForElement : String -> Cmd FrontendMsg
+setViewportForElement id =
+    Dom.getViewportOf "__RENDERED_TEXT__"
+        |> Task.andThen (\vp -> getElementWithViewPort vp id)
+        |> Task.attempt Types.SetViewPortForElement
+
+
+setViewPortForSelectedLine : Dom.Element -> Dom.Viewport -> Cmd FrontendMsg
+setViewPortForSelectedLine element viewport =
+    let
+        y =
+            viewport.viewport.y + element.element.y - element.element.height - 100
+    in
+    Task.attempt (\_ -> Types.NoOpFrontendMsg) (Dom.setViewportOf "__RENDERED_TEXT__" 0 y)
+
+
+getElementWithViewPort : Dom.Viewport -> String -> Task Dom.Error ( Dom.Element, Dom.Viewport )
+getElementWithViewPort vp id =
+    Dom.getElement id
+        |> Task.map (\el -> ( el, vp ))

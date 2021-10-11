@@ -23,8 +23,7 @@ import Types exposing (..)
 import Url exposing (Url)
 import View.Large
 import View.Small
-import Yaml
-import Yaml.Decode
+import View.Utility
 
 
 type alias Model =
@@ -138,6 +137,14 @@ update msg model =
 
         NoOpFrontendMsg ->
             ( model, Cmd.none )
+
+        SetViewPortForElement result ->
+            case result of
+                Ok ( element, viewport ) ->
+                    ( model, View.Utility.setViewPortForSelectedLine element viewport )
+
+                Err _ ->
+                    ( model, Cmd.none )
 
         -- USER
         SignIn ->
