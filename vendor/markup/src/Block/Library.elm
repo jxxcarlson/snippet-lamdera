@@ -218,10 +218,11 @@ createBlockPhase1 state =
 
                 Just _ ->
                     let
+                        -- TODO: think about this
                         errorMessage_ =
                             debug4 "createBlockPhase1 (LT)" (Just { red = "You need to terminate this block (1)", blue = "??" })
                     in
-                    commitBlock { state | errorMessage = errorMessage_ }
+                    commitBlock state
 
         EQ ->
             case state.currentBlock of
@@ -230,10 +231,11 @@ createBlockPhase1 state =
 
                 Just _ ->
                     let
+                        -- TODO: think about this
                         errorMessage_ =
                             debug4 "createBlockPhase1 (EQ)" (Just { red = "You need to terminate this block (2)", blue = "??2" })
                     in
-                    commitBlock { state | errorMessage = errorMessage_ }
+                    commitBlock state
 
         GT ->
             shiftCurrentBlock state
@@ -247,7 +249,7 @@ createBlockPhase2 state =
                 | currentBlock =
                     Just <|
                         SParagraph [ state.currentLineData.content ]
-                            { begin = state.index, end = state.index, status = BlockIncomplete, id = String.fromInt state.blockCount, indent = state.currentLineData.indent }
+                            { begin = state.index, end = state.index, status = BlockComplete, id = String.fromInt state.blockCount, indent = state.currentLineData.indent }
                 , blockCount = state.blockCount + 1
             }
 
@@ -267,7 +269,7 @@ createBlockPhase2 state =
                 | currentBlock =
                     Just <|
                         SBlock (nibble state.currentLineData.content |> transformHeading)
-                            [ SParagraph [ deleteSpaceDelimitedPrefix state.currentLineData.content ] { status = BlockIncomplete, begin = state.index, end = state.index, id = String.fromInt state.blockCount, indent = state.currentLineData.indent } ]
+                            [ SParagraph [ deleteSpaceDelimitedPrefix state.currentLineData.content ] { status = BlockComplete, begin = state.index, end = state.index, id = String.fromInt state.blockCount, indent = state.currentLineData.indent } ]
                             { begin = state.index, end = state.index, status = BlockIncomplete, id = String.fromInt state.blockCount, indent = state.currentLineData.indent }
                 , currentLineData = incrementLevel state.currentLineData -- do this because a block expects subsequent lines to be indented
                 , blockCount = state.blockCount + 1
@@ -278,7 +280,7 @@ createBlockPhase2 state =
                 | currentBlock =
                     Just <|
                         SBlock kind
-                            [ SParagraph [ deleteSpaceDelimitedPrefix state.currentLineData.content ] { status = BlockIncomplete, begin = state.index, end = state.index, id = String.fromInt state.blockCount, indent = state.currentLineData.indent } ]
+                            [ SParagraph [ deleteSpaceDelimitedPrefix state.currentLineData.content ] { status = BlockComplete, begin = state.index, end = state.index, id = String.fromInt state.blockCount, indent = state.currentLineData.indent } ]
                             { begin = state.index, end = state.index, status = BlockIncomplete, id = String.fromInt state.blockCount, indent = state.currentLineData.indent }
                 , currentLineData = incrementLevel state.currentLineData -- do this because a block expects subsequent lines to be indented
                 , blockCount = state.blockCount + 1
