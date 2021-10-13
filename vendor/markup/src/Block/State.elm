@@ -1,8 +1,9 @@
 module Block.State exposing (Accumulator, State, init)
 
+import Block.Block exposing (SBlock)
 import Block.Line
 import Dict
-import Markup.Block exposing (SBlock)
+import Lang.Lang as Lang exposing (Lang(..))
 import Render.MathMacro
 
 
@@ -25,6 +26,8 @@ type alias State =
     , blockCount : Int
     , inVerbatimBlock : Bool
     , accumulator : Accumulator
+    , errorMessage : Maybe { red : String, blue : String }
+    , lang : Lang
     }
 
 
@@ -52,6 +55,8 @@ init generation input =
     , inVerbatimBlock = False
     , accumulator = initialAccumulator
     , stack = []
+    , errorMessage = Nothing
+    , lang = Lang.MiniLaTeX
     }
 
 

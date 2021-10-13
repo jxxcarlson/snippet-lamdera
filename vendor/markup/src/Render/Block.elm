@@ -1,11 +1,11 @@
 module Render.Block exposing (render)
 
+import Block.Block exposing (Block(..))
 import Block.State
 import Dict exposing (Dict)
 import Element exposing (..)
 import Element.Background as Background
 import Element.Font as Font
-import Markup.Block exposing (Block(..))
 import Markup.Debugger exposing (debug3)
 import Render.AST2
 import Render.Math
@@ -70,14 +70,16 @@ verbatimBlockDict =
 blockDict : Dict String (Int -> Settings -> Block.State.Accumulator -> List Block -> Element msg)
 blockDict =
     Dict.fromList
-        [ ( "quotation", \g s a blocks -> quotationBlock g s a blocks )
+        [ ( "indent", \g s a blocks -> indent g s a blocks )
+
+        -- Used by Markdown
+        , ( "quotation", \g s a blocks -> quotationBlock g s a blocks )
         , ( "item", \g s a blocks -> item g s a blocks )
         , ( "title", \_ _ _ _ -> Element.none )
         , ( "heading1", \g s a blocks -> heading1 g s a blocks )
         , ( "heading2", \g s a blocks -> heading2 g s a blocks )
         , ( "heading3", \g s a blocks -> heading3 g s a blocks )
         , ( "heading4", \g s a blocks -> heading4 g s a blocks )
-        , ( "indent", \g s a blocks -> indent g s a blocks )
         ]
 
 
@@ -116,11 +118,6 @@ indent : Int -> Settings -> Block.State.Accumulator -> List Block -> Element msg
 indent g s a textList =
     Element.column [ spacing 18, Font.size 14, makeId textList, paddingEach { left = 18, right = 0, top = 0, bottom = 0 } ]
         (List.map (renderBlock g s a) textList)
-
-
-simpleElement : List (Attribute msg) -> Int -> Settings -> Block.State.Accumulator -> List Block -> Element msg
-simpleElement formatList g s a blocks =
-    Element.paragraph formatList (List.map (renderBlock g s a) (debug3 "XX, block in quotation" blocks))
 
 
 makeId : List Block -> Element.Attribute msg

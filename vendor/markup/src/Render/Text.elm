@@ -1,10 +1,11 @@
 module Render.Text exposing (render, viewTOC)
 
+import Block.Block exposing (ExprM(..))
 import Dict exposing (Dict)
 import Element exposing (Element, alignLeft, alignRight, centerX, column, el, newTabLink, px, spacing)
+import Element.Background as Background
 import Element.Font as Font
-import Markup.ASTTools as ASTTools
-import Markup.Block exposing (ExprM(..))
+import Expression.ASTTools as ASTTools
 import Render.AST2
 import Render.Math
 import Render.MathMacro
@@ -32,14 +33,14 @@ render generation settings accumulator text =
             Element.none
 
 
-notImplemented str =
-    Element.el [ Font.color (Element.rgb255 200 40 40) ] (Element.text <| "not implemented: " ++ str)
+errorText index str =
+    Element.el [ Font.color (Element.rgb255 200 40 40) ] (Element.text <| "(" ++ String.fromInt index ++ ") not implemented: " ++ str)
 
 
 renderVerbatim name generation settings accumulator str =
     case Dict.get name verbatimDict of
         Nothing ->
-            notImplemented name
+            errorText 1 name
 
         Just f ->
             f generation settings accumulator str
@@ -48,7 +49,7 @@ renderVerbatim name generation settings accumulator str =
 renderMarked name generation settings accumulator textList =
     case Dict.get name markupDict of
         Nothing ->
-            notImplemented name
+            Element.el [ Font.color errorColor ] (Element.text name)
 
         Just f ->
             f generation settings accumulator textList
@@ -62,15 +63,21 @@ markupDict =
         , ( "italic", \g s a textList -> italic g s a textList )
         , ( "boldItalic", \g s a textList -> boldItalic g s a textList )
         , ( "red", \g s a textList -> red g s a textList )
+        , ( "blue", \g s a textList -> blue g s a textList )
+        , ( "violet", \g s a textList -> violet g s a textList )
+        , ( "errorHighlight", \g s a textList -> errorHighlight g s a textList )
         , ( "title", \_ _ _ _ -> Element.none )
         , ( "heading1", \g s a textList -> heading1 g s a textList )
         , ( "heading2", \g s a textList -> heading2 g s a textList )
         , ( "heading3", \g s a textList -> heading3 g s a textList )
         , ( "heading4", \g s a textList -> heading4 g s a textList )
         , ( "heading5", \g s a textList -> italic g s a textList )
+        , ( "skip", \g s a textList -> skip g s a textList )
         , ( "link", \g s a textList -> link g s a textList )
         , ( "href", \g s a textList -> href g s a textList )
         , ( "image", \g s a textList -> image g s a textList )
+        , ( "texmacro", \g s a textList -> texmacro g s a textList )
+        , ( "texarg", \g s a textList -> texarg g s a textList )
 
         -- MiniLaTeX stuff
         , ( "term", \g s a textList -> term g s a textList )
@@ -88,6 +95,25 @@ verbatimDict =
         , ( "code", \g s a str -> code g s a str )
         , ( "math", \g s a str -> math g s a str )
         ]
+
+
+texmacro g s a textList =
+    macro1 (\str -> Element.el [] (Element.text ("\\" ++ str))) g s a textList
+
+
+texarg g s a textList =
+    macro1 (\str -> Element.el [] (Element.text ("{" ++ str ++ "}"))) g s a textList
+
+
+macro1 : (String -> Element msg) -> Int -> Settings -> Accumulator -> List ExprM -> Element msg
+macro1 f g s a textList =
+    case ASTTools.exprListToStringList textList of
+        -- TODO: temporary fix: parse is producing the args in reverse order
+        arg1 :: _ ->
+            f arg1
+
+        _ ->
+            el [ Font.color errorColor ] (Element.text "Invalid arguments")
 
 
 macro2 : (String -> String -> Element msg) -> Int -> Settings -> Accumulator -> List ExprM -> Element msg
@@ -333,6 +359,19 @@ heading4 g s a textList =
         ]
 
 
+skip g s a textList =
+    let
+        numVal : String -> Int
+        numVal str =
+            String.toInt str |> Maybe.withDefault 0
+
+        f : String -> Element msg
+        f str =
+            column [ Element.spacingXY 0 (numVal str) ] [ Element.text "-" ]
+    in
+    macro1 f g s a textList
+
+
 strong g s a textList =
     simpleElement [ Font.bold ] g s a textList
 
@@ -359,3 +398,15 @@ emph g s a textList =
 
 red g s a textList =
     simpleElement [ Font.color (Element.rgb255 200 0 0) ] g s a textList
+
+
+blue g s a textList =
+    simpleElement [ Font.color (Element.rgb255 0 0 200) ] g s a textList
+
+
+violet g s a textList =
+    simpleElement [ Font.color (Element.rgb255 150 100 255) ] g s a textList
+
+
+errorHighlight g s a textList =
+    simpleElement [ Background.color (Element.rgb255 255 200 200), Element.paddingXY 2 2 ] g s a textList
